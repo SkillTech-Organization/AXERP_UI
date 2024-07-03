@@ -6,11 +6,31 @@ $theme: mat.define-theme();
 @include mat.color-variants-backwards-compatibility($theme);
 
 @mixin theme($theme) {
+  /*
+    Beépített komponensek
+  */
   app-navbar {
     color: mat.get-theme-color($theme, primary);
-
   }
-  mat-sidenav, mat-toolbar {
+
+  mat-sidenav {
+    border-radius: 0px;
+  }
+  mat-sidenav {
+    background: mat.get-theme-color($theme, primary-container);
+  }
+  
+  mat-toolbar {
+    background: mat.get-theme-color($theme, primary-container);
+  }
+  mat-toolbar.secondary {
+    background: white; // #b89adb;
+  }
+
+  /*
+    HTML komponensek
+  */
+  tr.selected-row {
     background: mat.get-theme-color($theme, primary-container);
   }
 }
@@ -29,4 +49,12 @@ body {
   margin: 0;
   padding: 30px;
   height: 100%;
+}
+
+/*
+  General
+*/
+
+.m25 {
+  margin: 25px;
 }
