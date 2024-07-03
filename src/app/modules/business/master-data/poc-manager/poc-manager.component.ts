@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MockService } from '../../../services/mock.service';
@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
   providers: [MockService]
 })
 export class PocManagerComponent implements AfterViewInit {
-  @ViewChild(MatSort) sort!: MatSort
+  @ViewChild(MatSort, {static: true}) sort!: MatSort
   @ViewChild(MatPaginator) paginator!: MatPaginator
 
   gridModel: GridModel = new GridModel(
@@ -73,38 +73,46 @@ export class PocManagerComponent implements AfterViewInit {
 
   private async RefreshData(): Promise<void> {
     const data = await this.mockService.GetMockData()
-    this.dataSource = new MatTableDataSource<PocData>(data)
+    if (data) {
+      this.dataSource.data = data
+    }
   }
 
   //#endregion
 
   //#region Grid events
 
-  /** Whether the number of selected elements matches the total number of rows. */
+  selectRows() {
+    var sortedData = this.dataSource.sortData(this.dataSource.data, this.sort)
+    for (let index = this.dataSource.paginator!.pageIndex * this.dataSource.paginator!.pageSize;
+         index < (this.dataSource.paginator!.pageIndex + 1) * this.dataSource.paginator!.pageSize;
+         index++
+    ) {
+      this.selection.select(sortedData[index]);
+      // this.selectionAmount = this.selection.selected.length;
+    }
+  }
+
   isAllSelected() {
     const numSelected = this.selection.selected.length
     const numRows = this.dataSource.data.length
     return numSelected == numRows
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row))
   }
 
-  /** Announce the change in sort state for assistive technology. */
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`)
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared')
-    }
+  sortChange(sortState: Sort) {
+    this.selection.clear()
+
+    this.dataSource.data = this.dataSource.sortData(this.dataSource.data, this.sort)
+  }
+
+  pageChanged(event: PageEvent): void {
+    this.selection.clear()
   }
 
   //#endregion

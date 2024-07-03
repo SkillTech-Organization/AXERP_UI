@@ -1,27 +1,20 @@
 <div class="mat-elevation-z8 m25">
-    <!-- <mat-card class="example-card" appearance="outlined">
-        <mat-card-header>
-            <div mat-card-avatar class="example-header-image"></div>
-            <mat-card-title>PocData</mat-card-title>
-            <mat-card-subtitle>Functions</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions>
-            <button mat-flat-button>Add</button>
-            <button mat-flat-button [disabled]="selection.isEmpty">Edit</button>
-            <button mat-flat-button [disabled]="selection.isEmpty">Delete</button>
-        </mat-card-actions>
-    </mat-card> -->
-
     <mat-toolbar class="secondary">
-        <h1 class="example-app-name" style="margin-right: 10px;">Poc Data</h1>
-        <button mat-flat-button style="margin-right: 10px;"><mat-icon>add</mat-icon>Add</button>
-        <button mat-flat-button style="margin-right: 10px;"><mat-icon>edit</mat-icon>Edit</button> <!-- [disabled]="selection.isEmpty"-->
-        <button class="danger" style="margin-right: 10px;" mat-flat-button><mat-icon>delete</mat-icon>Delete</button>
+        <h1 class="mr10">Gas Transactions</h1>
+        <button mat-flat-button class="mr10">
+            <mat-icon>add</mat-icon>Add
+        </button>
+        <button mat-flat-button class="mr10" [disabled]="selection.isEmpty()">
+            <mat-icon>edit</mat-icon>Edit
+        </button>
+        <button mat-flat-button class="mr10 error" [disabled]="selection.isEmpty()">
+            <mat-icon>delete</mat-icon>Delete
+        </button>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
 
-    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="announceSortChange($event)">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
         <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
                 <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -46,6 +39,6 @@
         <tr mat-row *matRowDef="let row; columns: gridModel.DisplayedColumns;" [class.selected-row]="selection.isSelected(row)"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
 </div>
