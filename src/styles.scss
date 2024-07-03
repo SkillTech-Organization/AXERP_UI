@@ -1,29 +1,32 @@
 @use '@angular/material' as mat;
 
 $theme: mat.define-theme();
-// $theme: mat.define-theme((
-//   color: (
-//     theme-type: dark,
-//     primary: mat.$magenta-palette,
-//     tertiary: mat.$violet-palette,
-//   )
-// ));
-
-body {
-  @include mat.all-component-themes($theme);
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  margin: 0;
-//   padding: 30px;
-  height: 100%;
-}
-
-html {
-  min-height: 100%;
-}
-
-.component-wrapper {
-  min-height: 100%;
-}
 
 @include mat.core();
 @include mat.color-variants-backwards-compatibility($theme);
+
+@mixin theme($theme) {
+  app-navbar {
+    color: mat.get-theme-color($theme, primary);
+
+  }
+  mat-sidenav, mat-toolbar {
+    background: mat.get-theme-color($theme, primary-container);
+  }
+}
+
+:root {
+  @include mat.all-component-themes($theme);
+  @include theme($theme);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 30px;
+  height: 100%;
+}
