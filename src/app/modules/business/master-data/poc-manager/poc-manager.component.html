@@ -29,10 +29,32 @@
         </ng-container>
 
         @for (col of gridModel.Columns; track $index) {
-            <ng-container [matColumnDef]="col.ColKey">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                <td (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey]}} </td>
-            </ng-container>
+            @switch (col.ColumnType) {
+                @case ("string") {
+                    <ng-container [matColumnDef]="col.ColKey">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
+                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey]}} </td>
+                    </ng-container>
+                }
+                @case ("date") {
+                    <ng-container [matColumnDef]="col.ColKey">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
+                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | date: 'M-d-yyyy'}} </td>
+                    </ng-container>
+                }
+                @case ("number") {
+                    <ng-container [matColumnDef]="col.ColKey">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
+                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | number: '1.2-2'}} </td>
+                    </ng-container>
+                }
+                @case ("boolean") {
+                    <ng-container [matColumnDef]="col.ColKey">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
+                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey]  ? '✓' : '✗'}} </td>
+                    </ng-container>
+                }
+            }
         }
 
         <tr mat-header-row *matHeaderRowDef="gridModel.DisplayedColumns"></tr>

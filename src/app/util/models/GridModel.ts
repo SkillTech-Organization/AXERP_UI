@@ -1,3 +1,19 @@
+export enum ColumnTypes {
+    undefined = "undefined",
+    string = "string",
+    number = "number",
+    date = "date",
+    boolean = "boolean",
+    custom = "custom"
+}
+
+export enum TextAligns {
+    undefined = "undefined",
+    left = "left",
+    right = "right",
+    center = "center"
+}
+
 export class GridModel {
     public get DisplayedColumns(): string[] {
         if (this.ShowSelection) {
@@ -19,7 +35,9 @@ export class ColumnModel {
         public Show: boolean,
         public ColKey: string,
         public Title: string,
-        public SortTooltip: string = ""
+        public ColumnType: ColumnTypes = ColumnTypes.undefined,
+        public SortTooltip: string = "",
+        public TextAlign: TextAligns = TextAligns.left
     ) {
 
     }
