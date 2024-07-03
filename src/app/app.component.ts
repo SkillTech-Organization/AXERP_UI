@@ -6,6 +6,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { version, name } from '../../package.json'
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 })
 export class AppComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
+
+  public get version(): string {
+    return version
+  }
+
+  public get name(): string {
+    return name
+  }
 
   private _mobileQueryListener: () => void;
 

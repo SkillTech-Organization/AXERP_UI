@@ -8,16 +8,16 @@ export const routes: Routes = [
     {
         path: 'business',
         title: 'Business',
-        // component: AppComponent,  // this is the component with the <router-outlet> in the template
+        // component: AppComponent,
         children: [
             {
-                path: 'master-data/poc-manager',  // child route path
-                title: 'Poc Manager',
-                component: PocManagerComponent,  // child route component that the router renders
+                path: 'transactions/gas-transactions',
+                title: 'Gas Transactions',
+                component: PocManagerComponent,
             },
         ],
     },
     { path: 'home', component: DashboardComponent },
-    { path: '', redirectTo: '/home', pathMatch: 'full' }, // redirect to `first-component`
-    { path: '**', component: PageNotFoundComponent },  // Wildcard route for a 404 page
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
+    { path: '**', component: PageNotFoundComponent },
 ];
