@@ -12,7 +12,7 @@ env:
   PACKAGE_VERSION: 0
 
 on:
-#  pull_request: 
+  pull_request: 
     branches: [ develop ]
 #    types: [ closed ]
   workflow_dispatch:
