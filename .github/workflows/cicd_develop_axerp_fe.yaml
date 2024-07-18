@@ -4,17 +4,17 @@
 name: Build and deploy bbxFE to DEV environment
 
 env:
-  STORAGE_NAME: bbx # set this to your storage's name
-  AZURE_STORAGE_KEY: W6pStudoWs5SVxEJCwZeDILx5Kv1gYQ0Rut5P+ggnOpFSGI7CH5d4gjR2wwS60ey4ULYC+EgKkznMGsoxlYIGw==
-  CONNECTION_STRING: DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=bbx;AccountKey=W6pStudoWs5SVxEJCwZeDILx5Kv1gYQ0Rut5P+ggnOpFSGI7CH5d4gjR2wwS60ey4ULYC+EgKkznMGsoxlYIGw==;
-  PROJECT_NAME: bbx-ui
+  STORAGE_NAME: axerpuitest # set this to your storage's name
+  AZURE_STORAGE_KEY: 2tW0GIxAlVuCi2SyT7E1q55D4/7Cfee4Siz5e/K1aQB7GcTJXaGjF41nn1zqVsYvgwv1vFITGO6u+ASt0OO3vQ==
+  CONNECTION_STRING: DefaultEndpointsProtocol=https;AccountName=axerpuitest;AccountKey=2tW0GIxAlVuCi2SyT7E1q55D4/7Cfee4Siz5e/K1aQB7GcTJXaGjF41nn1zqVsYvgwv1vFITGO6u+ASt0OO3vQ==;EndpointSuffix=core.windows.net
+  PROJECT_NAME: axerp
   SHA_SHORT_COMMIT_NUMBER: 0
   PACKAGE_VERSION: 0
 
 on:
   pull_request: 
     branches: [ develop ]
-    types: [ closed ]
+#    types: [ closed ]
   workflow_dispatch:
 
 jobs:
@@ -86,7 +86,7 @@ jobs:
     needs: build
     environment: 
       name: Development
-      url: https://bbx.z1.web.core.windows.net/index.html
+      url: https://axerpuitest.z6.web.core.windows.net/index.html
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -94,7 +94,7 @@ jobs:
       - name: Azure Login
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.BBXFE_DEV_PUBLISH_PROFILE }}
+          creds: ${{ secrets.AXERP_FUNCTION_TEST_PUBLISHPROFILE }}
 
       - name: Delete the content of the blob storage
         uses: azure/CLI@v1
