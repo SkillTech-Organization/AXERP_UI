@@ -2,6 +2,9 @@
     <mat-toolbar class="secondary">
         <h1 class="mr10">Gas Transactions</h1>
         <button mat-flat-button class="mr10">
+            <mat-icon>add</mat-icon>Import From Google Sheets
+        </button>
+        <!-- <button mat-flat-button class="mr10">
             <mat-icon>add</mat-icon>Add
         </button>
         <button mat-flat-button class="mr10" [disabled]="selection.isEmpty()">
@@ -9,7 +12,7 @@
         </button>
         <button mat-flat-button class="mr10 error" [disabled]="selection.isEmpty()">
             <mat-icon>delete</mat-icon>Delete
-        </button>
+        </button> -->
     </mat-toolbar>
     
     <mat-divider></mat-divider>
@@ -61,6 +64,6 @@
         <tr mat-row *matRowDef="let row; columns: gridModel.DisplayedColumns;" [class.selected-row]="selection.isSelected(row)"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [length]="_totalCount" [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
 </div>
