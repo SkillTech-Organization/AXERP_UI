@@ -39,7 +39,7 @@
                 @case ("date") {
                     <ng-container [matColumnDef]="col.ColKey">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | date: 'M-d-yyyy'}} </td>
+                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | date: 'd-MM-yyyy'}} </td>
                     </ng-container>
                 }
                 @case ("number") {
@@ -61,6 +61,6 @@
         <tr mat-row *matRowDef="let row; columns: gridModel.DisplayedColumns;" [class.selected-row]="selection.isSelected(row)"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
+    <mat-paginator [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
     </mat-paginator>
 </div>
