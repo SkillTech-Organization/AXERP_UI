@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy bbxFE to DEV environment
+name: Build and deploy AXERP FE to DEV environment
 
 env:
   STORAGE_NAME: axerpuitest # set this to your storage's name
@@ -20,7 +20,7 @@ on:
 jobs:
   build:
 #    if: ${{ github.event.pull_request.merged }}
-    name: Build bbxUI Angular project
+    name: Build AXERP FE Angular project
     runs-on: ubuntu-latest
 
     steps:
