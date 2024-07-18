@@ -3,5 +3,5 @@ export interface PagedQueryRequest {
     PageSize: number;
     OrderBy: string;
     OrderDesc: boolean;
-    // Columns: string[];
+    Columns?: string;
 }

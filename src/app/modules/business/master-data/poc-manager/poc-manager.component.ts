@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -70,16 +70,19 @@ export class PocManagerComponent implements AfterViewInit {
   selection: SelectionModel<GasTransaction>
 
   _defaultSort: string = 'DeliveryID'
+  _activeColumns: string = 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 1
   _activePageSize: number = 5
   _orderDesc: boolean = false
+  _totalCount: number = 0
   get queryParams(): PagedQueryRequest {
     return {
       Page: this._activePageIndex,
       OrderBy: this._activeSort,
       OrderDesc: this._orderDesc,
-      PageSize: this._activePageSize
+      PageSize: this._activePageSize,
+      Columns: this._activeColumns
     } as PagedQueryRequest
   }
 
@@ -107,14 +110,13 @@ export class PocManagerComponent implements AfterViewInit {
   //#region Business
 
   private async RefreshData(): Promise<void> {
-    const data = await this.gasTransactionService.QueryGasTransactions({
-      Page: 5,
-      OrderBy: 'DeliveryID',
-      OrderDesc: false,
-      PageSize: 25
-    } as PagedQueryRequest)
+    const data = await this.gasTransactionService.QueryGasTransactions(this.queryParams)
     if (data) {
       this.dataSource.data = data?.Value?.Data ?? []
+      if (data?.Value?.Columns) {
+        this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
+      }
+      this._totalCount = data.Value?.TotalCount ?? 0
     }
   }
 
