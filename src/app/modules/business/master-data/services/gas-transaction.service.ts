@@ -7,6 +7,7 @@ import { lastValueFrom } from 'rxjs';
 import { PagedQueryRequest } from '../../../../util/models/PagedQueryRequest';
 import { ApiResponse } from '../../../../util/models/ApiResponse';
 import { ImportGasTransactionResponse } from '../models/ImportGasTransactionResponse';
+import { BasePagedQueryResponse } from '../../../../util/models/BasePagedQueryResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,9 @@ export class GasTransactionService {
 
   constructor(private readonly http: HttpClient) { }
 
-  public async QueryGasTransactions(params?: PagedQueryRequest): Promise<ApiResponse<GasTransaction>> {
+  public async QueryGasTransactions(params?: PagedQueryRequest): Promise<ApiResponse<BasePagedQueryResponse<GasTransaction>>> {
     const queryParams = HelperFunctions.ParseObjectAsQueryString(params);
-    const request = this.http.get<ApiResponse<GasTransaction>>(this.BaseUrl + 'QueryGasTransactions?' + queryParams)
+    const request = this.http.get<ApiResponse<BasePagedQueryResponse<GasTransaction>>>(this.BaseUrl + 'QueryGasTransactions?' + queryParams)
 
     return await lastValueFrom(request)
   }

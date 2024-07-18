@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PocManagerComponent } from './poc-manager.component';
+import { GasTransactionsManagerComponent } from './gas-transactions-manager.component';
 
 describe('PocManagerComponent', () => {
-  let component: PocManagerComponent;
-  let fixture: ComponentFixture<PocManagerComponent>;
+  let component: GasTransactionsManagerComponent;
+  let fixture: ComponentFixture<GasTransactionsManagerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PocManagerComponent]
+      imports: [GasTransactionsManagerComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PocManagerComponent);
+    fixture = TestBed.createComponent(GasTransactionsManagerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
