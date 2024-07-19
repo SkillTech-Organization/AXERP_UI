@@ -19,18 +19,34 @@ import { PagedQueryRequest } from '../../../../util/models/PagedQueryRequest';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { ImportGasTransactionsDialogComponent } from '../dialogs/import-gas-transactions-dialog/import-gas-transactions-dialog.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-gas-transactions-manager',
   templateUrl: './gas-transactions-manager.component.html',
   styleUrl: './gas-transactions-manager.component.scss',
   standalone: true,
-  imports: [CommonModule, MatToolbarModule, MatTableModule, MatCardModule, MatButtonModule, MatPaginatorModule, MatSortModule, MatCheckboxModule, MatDividerModule, MatIconModule],
+  imports: [
+    CommonModule, MatToolbarModule, MatTableModule, 
+    MatCardModule, MatButtonModule, MatPaginatorModule,
+    MatSortModule, MatCheckboxModule, MatDividerModule, MatIconModule,
+    FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
+    MatProgressSpinner
+  ],
   providers: [MockService]
 })
 export class GasTransactionsManagerComponent implements AfterViewInit {
   @ViewChild(MatSort, {static: true}) sort!: MatSort
   @ViewChild(MatPaginator) paginator!: MatPaginator
+
+  filter = new FormControl('');
+
+  loading: boolean = true
 
   gridModel: GridModel = new GridModel([])
   dataSource = new MatTableDataSource<GasTransaction>([])
@@ -39,19 +55,21 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   readonly dialog = inject(MatDialog);
 
   _defaultSort: string = 'DeliveryID'
-  _activeColumns: string = 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
+  _activeColumns: string = '' // 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 1
   _activePageSize: number = 5
   _orderDesc: boolean = false
   _totalCount: number = 0
+  _searchString: string = ""
   get queryParams(): PagedQueryRequest {
     return {
       Page: this._activePageIndex,
       OrderBy: this._activeSort,
       OrderDesc: this._orderDesc,
       PageSize: this._activePageSize,
-      Columns: this._activeColumns
+      Columns: this._activeColumns,
+      Search: this._searchString
     } as PagedQueryRequest
   }
 
@@ -69,7 +87,16 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
 
+    this.filter.valueChanges.pipe(debounceTime(250)).subscribe(newValue => {
+      this._searchString = newValue ?? ""
+      this.RefreshData()
+    })
+
     await this.RefreshData()
+  }
+
+  clearFilter(): void {
+    this.filter.setValue("")
   }
 
   //#endregion
@@ -77,13 +104,23 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   //#region Business
 
   private async RefreshData(): Promise<void> {
-    const data = await this.gasTransactionService.QueryGasTransactions(this.queryParams)
-    if (data) {
-      this.dataSource.data = data?.Value?.Data ?? []
-      if (data?.Value?.Columns) {
-        this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
+    try {
+      this.loading = true
+
+      const data = await this.gasTransactionService.QueryGasTransactions(this.queryParams)
+      if (data) {
+        this.dataSource.data = data?.Value?.Data ?? []
+        if (data?.Value?.Columns) {
+          this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
+        }
+        this._totalCount = data.Value?.TotalCount ?? 0
       }
-      this._totalCount = data.Value?.TotalCount ?? 0
+    }
+    catch (err) {
+      console.error(err)
+    }
+    finally {
+      this.loading = false
     }
   }
 

@@ -4,4 +4,5 @@ export interface PagedQueryRequest {
     OrderBy: string;
     OrderDesc: boolean;
     Columns?: string;
+    Search?: string;
 }

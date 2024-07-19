@@ -1,24 +1,28 @@
 <div class="mat-elevation-z8 m25">
-    <mat-toolbar class="secondary">
+    <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Gas Transactions</h1>
+        
         <button mat-flat-button class="mr10" (click)="ImportGasTransactions()">
             <mat-icon>add</mat-icon>Import From Google Sheets
         </button>
-        <!-- <button mat-flat-button class="mr10">
-            <mat-icon>add</mat-icon>Add
-        </button>
-        <button mat-flat-button class="mr10" [disabled]="selection.isEmpty()">
-            <mat-icon>edit</mat-icon>Edit
-        </button>
-        <button mat-flat-button class="mr10 error" [disabled]="selection.isEmpty()">
-            <mat-icon>delete</mat-icon>Delete
-        </button> -->
+        
+        <form class="example-form">
+            <mat-form-field appearance="outline" class="filter-form-field">
+                <mat-label>Search all columns (for specific column eg. DeliveryID = 5)</mat-label>
+                <input matInput [formControl]="filter" placeholder="Filter">
+                <mat-icon (click)="clearFilter()" matSuffix>delete</mat-icon>
+            </mat-form-field>
+        </form>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
 
-    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)">
-        <ng-container matColumnDef="select">
+    @if (loading) {
+        <mat-spinner class="spinner"></mat-spinner>
+    }
+
+    <table class="scroll-table mat-elevation-z8" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)" tabindex="0">
+        <ng-container matColumnDef="select" sticky>
             <th mat-header-cell *matHeaderCellDef>
                 <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()">

@@ -1,11 +1,13 @@
-table {
-  width: 100%;
-}
-
 th.mat-sort-header-sorted {
   color: black;
 }
 
 .mat-column-select {
   overflow: initial;
+}
+
+.spinner {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 200px;
 }
