@@ -1,3 +1,5 @@
+import { ColumnData } from "./ColumnData"
+
 export enum ColumnTypes {
     undefined = "undefined",
     string = "string",
@@ -27,6 +29,46 @@ export class GridModel {
         public ShowSelection: boolean = true
     ) {
 
+    }
+
+    public static GetColumnTypeFromColumnData(data: ColumnData): ColumnTypes {
+        if (data.Type.toLowerCase().includes("string")) {
+            return ColumnTypes.string
+        }
+        else if (data.Type.toLowerCase().includes("double") || 
+            data.Type.toLowerCase().includes("float") || 
+            data.Type.toLowerCase().includes("decimal") || 
+            data.Type.toLowerCase().includes("long") || 
+            data.Type.toLowerCase().includes("int")) {
+            return ColumnTypes.number
+        }
+        else if (data.Type.toLowerCase().includes("datetime")) {
+            return ColumnTypes.date
+        }
+        else if (data.Type.toLowerCase().includes("bool")) {
+            return ColumnTypes.boolean
+        }
+        return ColumnTypes.undefined
+    }
+
+    public static FromColumnDatas(data: ColumnData[]): GridModel {
+        var cols = []
+        
+        for (let i = 0; i < data.length; i++) {
+            const d = data[i]
+            const type = GridModel.GetColumnTypeFromColumnData(data[i])
+            let col = new ColumnModel(
+                true,
+                d.Name,
+                d.Title,
+                type,
+                `${d.Title} sort`,
+                type == ColumnTypes.date || type == ColumnTypes.number ? TextAligns.center : TextAligns.left
+            );
+            cols.push(col)
+        }
+        
+        return new GridModel(cols, true)
     }
 }
 

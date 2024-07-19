@@ -67,3 +67,57 @@ body {
 .mr10 {
   margin-right: 10px !important;
 }
+
+/*
+  Misc
+*/
+
+.filter-form-field {
+  min-width: 500px !important;
+  
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  
+  align-items: center;
+}
+
+.manager-toolbar {
+  min-height: 100px;
+}
+
+/*
+  Tables
+*/
+
+.scroll-table {
+  display: block;
+  overflow-x: scroll;
+}
+
+// .scroll-table {
+//   height: 400px;
+//   width: 550px;
+//   max-width: 100%;
+//   overflow: auto;
+// }
+
+// table {
+//   width: 800px;
+// }
+
+// td.mat-column-star {
+//   width: 20px;
+//   padding-right: 8px;
+// }
+
+// th.mat-column-position, td.mat-column-position {
+//   padding-left: 8px;
+// }
+
+// .mat-mdc-table-sticky-border-elem-right {
+//   border-left: 1px solid #e0e0e0;
+// }
+
+// .mat-mdc-table-sticky-border-elem-left {
+//   border-right: 1px solid #e0e0e0;
+// }

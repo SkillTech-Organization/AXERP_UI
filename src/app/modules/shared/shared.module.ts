@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
 
 
@@ -10,4 +9,4 @@ import { HttpClient } from '@angular/common/http';
     CommonModule
   ]
 })
-export class BusinessModule { }
+export class SharedModule { }

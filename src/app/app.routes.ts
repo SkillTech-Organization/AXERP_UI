@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-import { PocManagerComponent } from './modules/business/master-data/poc-manager/poc-manager.component';
+import { GasTransactionsManagerComponent } from './modules/business/master-data/gas-transactions-manager/gas-transactions-manager.component';
 import { DashboardComponent } from './modules/home/dashboard/dashboard.component';
 import { PageNotFoundComponent } from './modules/building-blocks/util/page-not-found/page-not-found.component';
 
@@ -13,7 +13,7 @@ export const routes: Routes = [
             {
                 path: 'transactions/gas-transactions',
                 title: 'Gas Transactions',
-                component: PocManagerComponent,
+                component: GasTransactionsManagerComponent,
             },
         ],
     },
