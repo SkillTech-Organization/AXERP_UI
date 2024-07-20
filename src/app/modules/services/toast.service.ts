@@ -10,21 +10,24 @@ export class ToastService {
 
   constructor(private _snackBar: MatSnackBar) { }
 
-  openInfo(message: string, durationMs: number = 5000) {
+  openInfo(message: any, durationMs: number = 5000) {
     this._snackBar.open(message, 'Close', {
       panelClass: "snackbar-info",
       duration: durationMs,
     } as MatSnackBarConfig)
   }
 
-  openWarning(message: string, durationMs: number = 5000) {
+  openWarning(message: any, durationMs: number = 5000) {
     this._snackBar.open(message, 'Close', {
       panelClass: "snackbar-warning",
       duration: durationMs,
     } as MatSnackBarConfig)
   }
 
-  openError(message: string, durationMs: number = 5000) {
+  openError(message: any, durationMs: number = 5000, consoleError: boolean = true) {
+    if (consoleError) {
+      console.error(message)
+    }
     this._snackBar.open(message, 'Close', {
       panelClass: "snackbar-error",
       duration: durationMs,

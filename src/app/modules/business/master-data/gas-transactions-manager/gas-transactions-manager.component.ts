@@ -108,7 +108,11 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
       this.loading = true
 
       const data = await this.gasTransactionService.QueryGasTransactions(this.queryParams)
-      if (data) {
+
+      if (!data.Value?.IsSuccess) {
+        this.snackService.openError(data.Value?.RequestError ?? "Request (QueryGasTransactions) failed.")
+      }
+      else if (data) {
         this.dataSource.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
           this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
@@ -116,8 +120,8 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
         this._totalCount$.next(data.Value?.TotalCount ?? 0)
       }
     }
-    catch (err) {
-      console.error(err)
+    catch {
+      // notodo
     }
     finally {
       this.loading = false
