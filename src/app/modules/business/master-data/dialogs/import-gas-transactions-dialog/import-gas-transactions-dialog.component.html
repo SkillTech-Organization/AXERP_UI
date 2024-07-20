@@ -1,18 +1,7 @@
-<h2 mat-dialog-title>Importing Gas Transactions</h2>
+<h2 mat-dialog-title>Importing Gas Transactions...</h2>
 <mat-dialog-content>
-    @if (data) {
-        <div>
-            <p>Total rows in sheet: {{data.TotalDataRowsInSheet}}</p>
-            <p>Imported rows: {{data.ImportedRows}}</p>
-            <p>New rows: {{data.NewRowsInsertedIntoDatabase}}</p>
-            <p>Invalid rows: {{data.InvalidRows}}</p>
-            <p>Errors: {{data.ImportErrors}}</p>
-        </div>
-    }
-    @if (loading) {
-        <mat-spinner id="spinner"></mat-spinner>
-    }
+    <mat-spinner class="center-spinner"></mat-spinner>
 </mat-dialog-content>
-<mat-dialog-actions>
+<!-- <mat-dialog-actions>
     <button mat-button (click)="onCloseClick()" cdkFocusInitial>Close</button>
-</mat-dialog-actions>
+</mat-dialog-actions> -->

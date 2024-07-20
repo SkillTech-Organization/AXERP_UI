@@ -38,6 +38,27 @@ $theme: mat.define-theme();
   tr.selected-row {
     background: mat.get-theme-color($theme, primary-container);
   }
+  
+  /*
+    Snackbars
+  */
+  .snackbar-info {
+    --mdc-snackbar-container-color: green;
+    --mdc-snackbar-supporting-text-color: white;
+    --mat-snack-bar-button-color: rgb(211, 208, 255);
+  }
+
+  .snackbar-warning {
+    --mdc-snackbar-container-color: rgba(255, 255, 0, 0.637);
+    --mdc-snackbar-supporting-text-color: black;
+    --mat-snack-bar-button-color: black;
+  }
+
+  .snackbar-error {
+    --mdc-snackbar-container-color: red;
+    --mdc-snackbar-supporting-text-color: white;
+    --mat-snack-bar-button-color: rgb(211, 208, 255);
+  }
 }
 
 :root {
@@ -83,6 +104,10 @@ body {
 
 .manager-toolbar {
   min-height: 100px;
+}
+
+.center-spinner {
+  margin: auto;
 }
 
 /*

@@ -1,11 +1,10 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MockService } from '../../../services/mock.service';
 import { GasTransaction } from '../models/GasTransaction';
-import { ColumnModel, ColumnTypes, GridModel, TextAligns } from '../../../../util/models/GridModel';
+import { GridModel } from '../../../../util/models/GridModel';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -25,6 +24,7 @@ import { FormControl, FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, debounceTime } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-gas-transactions-manager',
@@ -74,7 +74,8 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   }
 
   constructor(
-    private gasTransactionService: GasTransactionService
+    private gasTransactionService: GasTransactionService,
+    private snackService: ToastService
   ) {
     const initialSelection: any[] = []
     const allowMultiSelect = false

@@ -1,0 +1,19 @@
+<span matSnackBarLabel>
+    <div>
+        @if (message) {
+            <p>{{message}}</p>
+        }
+        <p>Total rows in sheet: {{data.TotalDataRowsInSheet}}</p>
+        <p>Imported rows: {{data.ImportedRows}}</p>
+        <p>New rows: {{data.NewRowsInsertedIntoDatabase}}</p>
+        @if (data.InvalidRows && data.InvalidRows > 0) {
+            <p>Invalid rows: {{data.InvalidRows}}</p>
+        }
+        @if (data.ImportErrors && data.ImportErrors.length > 0) {
+            <p>Errors: {{data.ImportErrors}}</p>
+        }
+    </div>
+</span>
+<span matSnackBarActions>
+    <button mat-button matSnackBarAction (click)="snackBarRef.dismissWithAction()">Close</button>
+</span>
