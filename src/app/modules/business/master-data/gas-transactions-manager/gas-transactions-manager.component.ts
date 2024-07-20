@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { debounceTime } from 'rxjs';
+import { BehaviorSubject, debounceTime } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
@@ -60,7 +60,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   _activePageIndex: number = 1
   _activePageSize: number = 5
   _orderDesc: boolean = false
-  _totalCount: number = 0
+  _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""
   get queryParams(): PagedQueryRequest {
     return {
@@ -84,7 +84,6 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   //#region Lifecycle
 
   async ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
 
     this.filter.valueChanges.pipe(debounceTime(250)).subscribe(newValue => {
@@ -113,7 +112,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
         if (data?.Value?.Columns) {
           this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
         }
-        this._totalCount = data.Value?.TotalCount ?? 0
+        this._totalCount$.next(data.Value?.TotalCount ?? 0)
       }
     }
     catch (err) {
