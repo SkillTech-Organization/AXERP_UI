@@ -95,6 +95,8 @@ body {
 
 .filter-form-field {
   min-width: 500px !important;
+
+  max-height: 56px;
   
   flex-direction: row !important;
   flex-wrap: wrap;
