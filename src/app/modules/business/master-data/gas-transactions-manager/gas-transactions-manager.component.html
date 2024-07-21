@@ -2,13 +2,17 @@
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Gas Transactions</h1>
         
-        <button mat-flat-button class="mr10" (click)="ImportGasTransactions()">
-            <mat-icon>add</mat-icon>Import From Google Sheets
+        <button mat-mini-fab class="mr10 function-minifab-btn fab-primary" (click)="ImportGasTransactions()">
+            <mat-icon>description</mat-icon>
+        </button>
+        <button mat-flat-button class="mr10 function-normal-btn" (click)="ImportGasTransactions()">
+            <mat-icon>description</mat-icon>
+            <span class="function-btn-text">Import From Google Sheets</span>
         </button>
         
         <form class="example-form">
             <mat-form-field appearance="outline" class="filter-form-field">
-                <mat-label>Search all columns (for specific column eg. DeliveryID = 5)</mat-label>
+                <mat-label class="filter-form-desc">Search all columns (for specific column eg. DeliveryID = 5)</mat-label>
                 <input matInput [formControl]="filter" placeholder="Filter">
                 <mat-icon (click)="clearFilter()" matSuffix>delete</mat-icon>
             </mat-form-field>

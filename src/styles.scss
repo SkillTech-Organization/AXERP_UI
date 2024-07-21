@@ -7,6 +7,16 @@ $theme: mat.define-theme();
 
 @mixin theme($theme) {
   /*
+    Variable overwrite
+  */
+
+  // --mdc-filled-button-container-color: #7d00fa;
+  .fab-primary {
+    --mdc-fab-small-container-color: #7d00fa;
+    --mat-icon-color: white;
+  }
+
+  /*
     Beépített komponensek
   */
   app-navbar {
@@ -59,6 +69,77 @@ $theme: mat.define-theme();
     --mdc-snackbar-supporting-text-color: white;
     --mat-snack-bar-button-color: rgb(211, 208, 255);
   }
+
+  /*
+    Responsivity
+  */
+
+  /*
+    MIN WIDTH 1412 PX
+  */
+  @media (min-width: 1412px) {
+    .function-minifab-btn {
+      display: none;
+    }
+
+    .filter-form-field {
+      min-width: 500px !important;
+
+      max-height: 56px;
+      
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      
+      align-items: center;
+    }
+  }
+
+  /*
+    MAX WIDTH 1412 PX
+  */
+  @media (max-width: 1412px) {
+    .function-minifab-btn {
+      display: default;
+    }
+
+    .function-normal-btn {
+      display: none;
+    }
+    .function-btn-text {
+      display: none;
+    }
+
+    .filter-form-field::placeholder {
+      display: none;
+    }
+
+    .filter-form-field {
+      min-width: 250px !important;
+
+      max-height: 56px;
+      
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      
+      align-items: center;
+
+      .filter-form-desc {
+        display: none;
+      }
+    }
+  }
+
+  /*
+    MAX WIDTH 600 PX
+  */
+  @media (max-width: 600px) {
+    .manager-toolbar {
+      flex-direction: column;
+      min-height: 200px;
+      padding-top: 25px;
+      row-gap: 10px;
+    }
+  }
 }
 
 :root {
@@ -92,17 +173,6 @@ body {
 /*
   Misc
 */
-
-.filter-form-field {
-  min-width: 500px !important;
-
-  max-height: 56px;
-  
-  flex-direction: row !important;
-  flex-wrap: wrap;
-  
-  align-items: center;
-}
 
 .manager-toolbar {
   min-height: 100px;
