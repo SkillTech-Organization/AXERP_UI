@@ -57,16 +57,16 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   _defaultSort: string = 'DeliveryID'
   _activeColumns: string = '' // 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
   _activeSort: string = this._defaultSort
-  _activePageIndex: number = 1
+  _activePageIndex: number = 0
   _activePageSize: number = 5
-  _orderDesc: boolean = false
+  _orderByDesc: boolean = false
   _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""
   get queryParams(): PagedQueryRequest {
     return {
-      Page: this._activePageIndex,
+      Page: this._activePageIndex + 1,
       OrderBy: this._activeSort,
-      OrderDesc: this._orderDesc,
+      OrderByDesc: this._orderByDesc,
       PageSize: this._activePageSize,
       Columns: this._activeColumns,
       Search: this._searchString
@@ -85,7 +85,8 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   //#region Lifecycle
 
   async ngAfterViewInit() {
-    this.dataSource.sort = this.sort
+    this.sort.active = this._activeSort
+    this.sort.direction = this._orderByDesc ? "desc" : "asc"
 
     this.filter.valueChanges.pipe(debounceTime(250)).subscribe(newValue => {
       this._searchString = newValue ?? ""
@@ -156,7 +157,6 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
          index++
     ) {
       this.selection.select(sortedData[index]);
-      // this.selectionAmount = this.selection.selected.length;
     }
   }
 
@@ -172,15 +172,13 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
       this.dataSource.data.forEach(row => this.selection.select(row))
   }
 
-  sortChange(sortState: Sort) {
+  async sortChange(sortState: Sort) {
     this.selection.clear()
 
     this._activeSort = sortState.active ?? this._defaultSort
-    this._orderDesc = sortState.direction == 'desc'
-
-    // this.dataSource.data = this.dataSource.sortData(this.dataSource.data, this.sort)
-
-    this.RefreshData()
+    this._orderByDesc = sortState.direction == 'desc'
+    
+    await this.RefreshData()
   }
 
   pageChanged(event: PageEvent): void {
