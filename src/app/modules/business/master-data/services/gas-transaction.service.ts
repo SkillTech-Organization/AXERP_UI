@@ -10,6 +10,7 @@ import { ImportGasTransactionResponse } from '../models/ImportGasTransactionResp
 import { BasePagedQueryResponse } from '../../../../util/models/BasePagedQueryResponse';
 import { BaseService } from '../../../../config/base.service';
 import { ToastService } from '../../../services/toast.service';
+import { ProcessBlobFilesResponse } from '../models/ProcessBlobFilesResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,15 @@ export class GasTransactionService extends BaseService {
 
   public async CountGasTransactions(): Promise<number> {
     const request = this.http.get<number>(this.BaseUrl + 'CountGasTransactions')
+      .pipe(
+        catchError(this.handleError)
+      )
+
+    return await lastValueFrom(request)
+  }
+
+  public async ProcessBlobFiles(): Promise<ApiResponse<ProcessBlobFilesResponse>> {
+    const request = this.http.get<ApiResponse<ProcessBlobFilesResponse>>(this.BaseUrl + 'ProcessBlobFiles')
       .pipe(
         catchError(this.handleError)
       )

@@ -1,0 +1,18 @@
+<span matSnackBarLabel>
+    <div>
+        @if (message) {
+            <p>{{message}}</p>
+        }
+        <p>Processed: {{data.Processed?.length ?? 0}}</p>
+        <p>Errors: {{data.Errors?.length ?? 0}}</p>
+        <!-- @if (data.Processed && data.Processed > 0) {
+            <p>Processed files: {{data.Processed}}</p>
+        } -->
+        @if (data.Errors && data.Errors.length > 0) {
+            <p>Errors: {{data.Errors}}</p>
+        }
+    </div>
+</span>
+<span matSnackBarActions>
+    <button mat-button matSnackBarAction (click)="snackBarRef.dismissWithAction()">Close</button>
+</span>

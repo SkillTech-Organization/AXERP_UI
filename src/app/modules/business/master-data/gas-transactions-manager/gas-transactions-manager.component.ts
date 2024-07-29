@@ -25,6 +25,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject, debounceTime } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ToastService } from '../../../services/toast.service';
+import { ProcessBlobFilesDialogComponent } from '../dialogs/process-blob-files-dialog/process-blob-files-dialog.component';
 
 @Component({
   selector: 'app-gas-transactions-manager',
@@ -139,6 +140,23 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     ref.afterClosed().subscribe(result => {
       if (result) {
         const importRef = this.dialog.open(ImportGasTransactionsDialogComponent)
+        importRef.afterClosed().subscribe(result => {
+          this.RefreshData()
+        })
+      }
+    })
+  }
+
+  public ProcessBlobFiles(): void {
+    const ref = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Confirmation",
+        message: "Are you sure you want to process the blob files?"
+      }
+    })
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        const importRef = this.dialog.open(ProcessBlobFilesDialogComponent)
         importRef.afterClosed().subscribe(result => {
           this.RefreshData()
         })

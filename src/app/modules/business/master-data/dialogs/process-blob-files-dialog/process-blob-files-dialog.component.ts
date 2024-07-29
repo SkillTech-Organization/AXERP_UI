@@ -17,7 +17,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ToastrTypes, ToastService } from '../../../../services/toast.service';
 
 @Component({
-  selector: 'app-import-gas-transactions-dialog',
+  selector: 'app-process-blob-files-dialog',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -30,40 +30,37 @@ import { ToastrTypes, ToastService } from '../../../../services/toast.service';
     MatDialogClose,
     MatProgressSpinner
   ],
-  templateUrl: './import-gas-transactions-dialog.component.html',
-  styleUrl: './import-gas-transactions-dialog.component.scss'
+  templateUrl: './process-blob-files-dialog.component.html',
+  styleUrl: './process-blob-files-dialog.component.scss'
 })
-export class ImportGasTransactionsDialogComponent implements OnInit {
-  readonly dialogRef = inject(MatDialogRef<ImportGasTransactionsDialogComponent>);
+export class ProcessBlobFilesDialogComponent implements OnInit {
+  readonly dialogRef = inject(MatDialogRef<ProcessBlobFilesDialogComponent>);
 
   loading: boolean = true
 
   data?: ImportGasTransactionResponse
 
   constructor(private service: GasTransactionService,
-              private snackService: ToastService) {
+    private snackService: ToastService) {
 
   }
 
   async ngOnInit(): Promise<void> {
-    const response = await this.service.ImportGasTransactions()
+    const response = await this.service.ProcessBlobFiles()
     if (response?.Value) {
       const importResponse = response?.Value
 
       if (!importResponse.IsSuccess) {
         this.snackService.openError(importResponse.RequestError ?? "Internal Server Error")
       } else {
-        if (importResponse.InvalidRows === 0 && importResponse.ImportedRows === importResponse.NewRowsInsertedIntoDatabase) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.info, 'Success!')
+        if (importResponse.Errors.length === 0) {
+          this.snackService.openBlobStatistics(importResponse, ToastrTypes.info, 'Success!')
         }
-        else if (importResponse.InvalidRows === 0 && importResponse.ImportedRows >= importResponse.NewRowsInsertedIntoDatabase) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.warning, 'Warning! Import succeeded but some rows were already in the database.')
+        else if (importResponse.Errors.length > 0 && importResponse.Processed.length > 0) {
+          this.snackService.openBlobStatistics(importResponse, ToastrTypes.warning, 'Not all blob files could be processed!')
         }
-        else if (importResponse.InvalidRows > 0) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.error, 'Error!')
-        }
-        else {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.error, 'Error! Invalid import statistics.')
+        else if (importResponse.Errors.length > 0 && importResponse.Processed.length === 0) {
+          this.snackService.openBlobStatistics(importResponse, ToastrTypes.error, 'Error!')
         }
       }
     }
