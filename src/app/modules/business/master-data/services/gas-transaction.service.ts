@@ -87,6 +87,7 @@ export class GasTransactionService extends BaseService {
                   element.Reference,
                   element.Reference2,
                   element.Reference3,
+                  element.BLFileName,
                   element.TruckLoadingCompanyComment,
                   element.TruckCompany
                 ))
