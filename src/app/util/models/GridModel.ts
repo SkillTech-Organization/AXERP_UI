@@ -9,6 +9,15 @@ export enum ColumnTypes {
     custom = "custom"
 }
 
+export const ColumnTypeToAgFilter = {
+    "undefined": true,
+    "string": 'agTextColumnFilter',
+    "number": 'agNumberColumnFilter',
+    "date": 'agDateColumnFilter',
+    "boolean": true,
+    "custom": true,
+}
+
 export enum TextAligns {
     undefined = "undefined",
     left = "left",

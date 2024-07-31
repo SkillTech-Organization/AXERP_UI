@@ -17,14 +17,6 @@
             <mat-icon>dynamic_form</mat-icon>
             <span class="function-btn-text">Process Blob Files</span>
         </button>
-        
-        <form class="example-form">
-            <mat-form-field appearance="outline" class="filter-form-field">
-                <mat-label class="filter-form-desc">Search all columns (for specific column eg. DeliveryID = 5)</mat-label>
-                <input matInput [formControl]="filter" placeholder="Filter">
-                <mat-icon (click)="clearFilter()" matSuffix>delete</mat-icon>
-            </mat-form-field>
-        </form>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
@@ -33,53 +25,23 @@
         <mat-spinner class="spinner"></mat-spinner>
     }
 
-    <table class="scroll-table mat-elevation-z8" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortChange($event)" tabindex="0">
-        <ng-container matColumnDef="select" sticky>
-            <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()">
-                </mat-checkbox>
-            </th>
-            <td mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)">
-                </mat-checkbox>
-            </td>
-        </ng-container>
+    <ag-grid-angular
+        #transactionsGrid
 
-        @for (col of gridModel.Columns; track $index) {
-            @switch (col.ColumnType) {
-                @case ("string") {
-                    <ng-container [matColumnDef]="col.ColKey">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey]}} </td>
-                    </ng-container>
-                }
-                @case ("date") {
-                    <ng-container [matColumnDef]="col.ColKey">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | date: 'd-MM-yyyy'}} </td>
-                    </ng-container>
-                }
-                @case ("number") {
-                    <ng-container [matColumnDef]="col.ColKey">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey] | number: '1.2-2'}} </td>
-                    </ng-container>
-                }
-                @case ("boolean") {
-                    <ng-container [matColumnDef]="col.ColKey">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header [sortActionDescription]="col.SortTooltip"> {{col.Title}} </th>
-                        <td [style.text-align]="col.TextAlign" (click)="selection.toggle(element)" mat-cell *matCellDef="let element"> {{element[col.ColKey]  ? '✓' : '✗'}} </td>
-                    </ng-container>
-                }
-            }
-        }
+        class="ag-theme-quartz ag-axerp" 
 
-        <tr mat-header-row *matHeaderRowDef="gridModel.DisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: gridModel.DisplayedColumns;" [class.selected-row]="selection.isSelected(row)"></tr>
-    </table>
+        [rowData]="data"
+        [columnDefs]="colDefs"
 
-    <mat-paginator [length]="_totalCount$ | async" [pageIndex]="_activePageIndex" [pageSizeOptions]="[5, 10, 15, 20, 25, 50, 100]" (page)="pageChanged($event)" showFirstLastButtons aria-label="Select page of periodic elements">
-    </mat-paginator>
+        [pagination]="true"
+        [paginationPageSize]="_activePageSize"
+        [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
+        [paginationAutoPageSize]="false"
+        
+        [rowSelection]="'multiple'"
+        [rowMultiSelectWithClick]="true"
+        [suppressRowClickSelection]="false"
+        
+        (paginationChanged)="onPaginationChanged($event)"
+        (gridReady)="onGridReady($event)" />
 </div>
