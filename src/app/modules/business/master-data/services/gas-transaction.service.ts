@@ -54,6 +54,9 @@ export class GasTransactionService extends BaseService {
             }
             if (v.Data?.length ?? 0 > 0) {
               v.Data?.forEach(element => {
+                if (element.BLFilename) {
+                  console.log(element)
+                }
                 res.Value?.Data?.push(new GasTransaction(
                   element.DeliveryID,
                   element.DateLoadedEnd,
@@ -87,7 +90,7 @@ export class GasTransactionService extends BaseService {
                   element.Reference,
                   element.Reference2,
                   element.Reference3,
-                  element.BLFileName,
+                  element.BLFilename,
                   element.TruckLoadingCompanyComment,
                   element.TruckCompany
                 ))

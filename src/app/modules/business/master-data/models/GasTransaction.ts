@@ -33,7 +33,7 @@ export interface IGasTransaction {
     Reference: string | null
     Reference2: string | null
     Reference3: string | null
-    BLFileName: string | null
+    BLFilename: string | null
     TruckLoadingCompanyComment: string | null
     TruckCompany: string | null
 }
@@ -77,7 +77,7 @@ export class GasTransaction implements IGasTransaction {
         public Reference: string | null,
         public Reference2: string | null,
         public Reference3: string | null,
-        public BLFileName: string | null,
+        public BLFilename: string | null,
         public TruckLoadingCompanyComment: string | null,
         public TruckCompany: string | null,
     ) {

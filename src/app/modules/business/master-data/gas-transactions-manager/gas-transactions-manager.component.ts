@@ -98,7 +98,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   }
 
   setGridData() {
-    console.log(this.data)
+    //console.log(this.data)
     this.gridApi.setGridOption("rowData", this.data);
     this.gridApi.setGridOption("columnDefs", this.colDefs);
     this.gridApi.setGridOption("paginationPageSize", this._activePageSize);
