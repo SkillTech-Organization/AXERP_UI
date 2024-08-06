@@ -1,35 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
 import {
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import { MatInputModule } from '@angular/material/input';
 import { GasTransactionService } from '../../services/gas-transaction.service';
 import { ImportGasTransactionResponse } from '../../models/ImportGasTransactionResponse';
-import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ToastrTypes, ToastService } from '../../../../services/toast.service';
+import { LoadingSpinnerDialogContentComponent } from "../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content";
 
 @Component({
   selector: 'app-process-blob-files-dialog',
   standalone: true,
   imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatProgressSpinner
-  ],
+    LoadingSpinnerDialogContentComponent
+],
   templateUrl: './process-blob-files-dialog.component.html',
   styleUrl: './process-blob-files-dialog.component.scss'
 })
@@ -65,10 +49,6 @@ export class ProcessBlobFilesDialogComponent implements OnInit {
       }
     }
     this.loading = false
-    this.dialogRef.close(true);
-  }
-
-  onCloseClick(): void {
     this.dialogRef.close(true);
   }
 }

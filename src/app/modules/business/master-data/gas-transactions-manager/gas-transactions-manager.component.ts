@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { MockService } from '../../../services/mock.service';
 import { GasTransaction } from '../models/GasTransaction';
 import { ColumnModel, ColumnTypes, ColumnTypeToAgFilter, GridModel } from '../../../../util/models/GridModel';
@@ -17,9 +17,9 @@ import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmatio
 import { ImportGasTransactionsDialogComponent } from '../dialogs/import-gas-transactions-dialog/import-gas-transactions-dialog.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, debounceTime } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ToastService } from '../../../services/toast.service';
 import { ProcessBlobFilesDialogComponent } from '../dialogs/process-blob-files-dialog/process-blob-files-dialog.component';
@@ -27,15 +27,13 @@ import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 // import { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
 import {
   ColDef,
-  ColGroupDef,
   GridApi,
-  GridOptions,
   GridReadyEvent,
-  ModuleRegistry,
-  createGrid,
 } from "ag-grid-community";
 import moment from 'moment';
-import { ColumnData } from '../../../../util/models/ColumnData';
+import { ManagerButtonComponent } from '../../../shared/buttons/manager-button/manager-button.component';
+import { DeleteTransactionsDialogComponent } from '../dialogs/delete-transactions-dialog/delete-transactions-dialog.component';
+import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
 
 @Component({
   selector: 'app-gas-transactions-manager',
@@ -48,7 +46,7 @@ import { ColumnData } from '../../../../util/models/ColumnData';
     MatCheckboxModule, MatDividerModule, MatIconModule,
     FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatProgressSpinner,
-    AgGridAngular
+    AgGridAngular, ManagerButtonComponent
   ],
   providers: [MockService]
 })
@@ -56,8 +54,6 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   private gridApi!: GridApi<GasTransaction>;
 
   gridDiv = document.querySelector<HTMLElement>("#transactionsGrid")!;
-
-  // filter = new FormControl('');
 
   loading: boolean = true
 
@@ -88,6 +84,13 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     } as PagedQueryRequest
   }
 
+  get SelectedIds(): string[] {
+    if (!this.gridApi) {
+      return []
+    }
+    return this.gridApi.getSelectedRows().map(x => x.DeliveryID)
+  }
+
   constructor(
     private gasTransactionService: GasTransactionService,
     private snackService: ToastService
@@ -98,34 +101,16 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   }
 
   setGridData() {
-    //console.log(this.data)
     this.gridApi.setGridOption("rowData", this.data);
     this.gridApi.setGridOption("columnDefs", this.colDefs);
     this.gridApi.setGridOption("paginationPageSize", this._activePageSize);
   }
 
-  onGridReady(params: GridReadyEvent<GasTransaction>) {
-    // console.log("onGridReady: ", params)
-    this.gridApi = params.api;
-  }
-
   //#region Lifecycle
 
   async ngAfterViewInit() {
-    // this.sort.active = this._activeSort
-    // this.sort.direction = this._orderByDesc ? "desc" : "asc"
-
-    // this.filter.valueChanges.pipe(debounceTime(250)).subscribe(newValue => {
-    //   this._searchString = newValue ?? ""
-    //   this.RefreshData()
-    // })
-
     await this.RefreshData()
   }
-
-  // clearFilter(): void {
-  //   this.filter.setValue("")
-  // }
 
   //#endregion
 
@@ -176,15 +161,11 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     switch (element.ColumnType) {
       case ColumnTypes.number:
         return (params: any) => {
-          //console.log(params)
           return params.value?.toFixed(2).toString().replace('.', ',')
         }
       case ColumnTypes.date:
         return (params: any) => {
-          //console.log(params)
-          //return moment(params.value).locale('fr-FR').toString()
           return moment(params.value).format('DD/M/yyyy hh:mm')
-          //return params.value?.toFixed(2)
         }
     }
     return undefined
@@ -199,8 +180,8 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
     ref.afterClosed().subscribe(result => {
       if (result) {
-        const importRef = this.dialog.open(ImportGasTransactionsDialogComponent)
-        importRef.afterClosed().subscribe(result => {
+        const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
+        dialogRef.afterClosed().subscribe(result => {
           this.RefreshData()
         })
       }
@@ -216,8 +197,31 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
     ref.afterClosed().subscribe(result => {
       if (result) {
-        const importRef = this.dialog.open(ProcessBlobFilesDialogComponent)
-        importRef.afterClosed().subscribe(result => {
+        const dialogRef = this.dialog.open(ProcessBlobFilesDialogComponent)
+        dialogRef.afterClosed().subscribe(result => {
+          this.RefreshData()
+        })
+      }
+    })
+  }
+
+  public DeleteSelectedTransactions(): void {
+    if (this.SelectedIds.length === 0) {
+      this.snackService.openWarning("At least one row must be selected for delete")
+      return
+    }
+    const ref = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Confirmation",
+        message: "Are you sure you want to delete the selected transaction(s)?"
+      }
+    })
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        const dialogRef = this.dialog.open(DeleteTransactionsDialogComponent, {
+          data: new DeleteTransactionRequest(this.SelectedIds)
+        })
+        dialogRef.afterClosed().subscribe(result => {
           this.RefreshData()
         })
       }
@@ -228,51 +232,17 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
 
   //#region Grid events
 
+  onGridReady(params: GridReadyEvent<GasTransaction>) {
+    this.gridApi = params.api;
+  }
+
   onPaginationChanged(event: any) {
     //console.log("onPaginationPageLoaded: ", event);
   }
 
-  /*
-  selectRows() {
-    var sortedData = this.dataSource.sortData(this.dataSource.data, this.sort)
-    for (let index = this.dataSource.paginator!.pageIndex * this.dataSource.paginator!.pageSize;
-         index < (this.dataSource.paginator!.pageIndex + 1) * this.dataSource.paginator!.pageSize;
-         index++
-    ) {
-      this.selection.select(sortedData[index]);
-    }
+  onRowSelected(event: any) {
+    //console.log("onRowSelected: ", event, this.SelectedIds)
   }
-
-  isAllSelected() {
-    const numSelected = this.selection.selected.length
-    const numRows = this.dataSource.data.length
-    return numSelected == numRows
-  }
-
-  toggleAllRows() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row))
-  }
-
-  async sortChange(sortState: Sort) {
-    this.selection.clear()
-
-    this._activeSort = sortState.active ?? this._defaultSort
-    this._orderByDesc = sortState.direction == 'desc'
-    
-    await this.RefreshData()
-  }
-
-  pageChanged(event: PageEvent): void {
-    this.selection.clear()
-
-    this._activePageIndex = event.pageIndex
-    this._activePageSize = event.pageSize
-
-    this.RefreshData()
-  }
-  */
 
   //#endregion
 }

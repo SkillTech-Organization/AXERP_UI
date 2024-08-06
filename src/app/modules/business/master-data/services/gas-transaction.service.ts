@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { GasTransaction, IGasTransaction } from '../models/GasTransaction';
 import { HelperFunctions } from '../../../../util/HelperFunctions';
 import { catchError, lastValueFrom, map } from 'rxjs';
@@ -11,6 +11,8 @@ import { BasePagedQueryResponse } from '../../../../util/models/BasePagedQueryRe
 import { BaseService } from '../../../../config/base.service';
 import { ToastService } from '../../../services/toast.service';
 import { ProcessBlobFilesResponse } from '../models/ProcessBlobFilesResponse';
+import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
+import { BaseResponse } from '../../../../util/models/BaseResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -107,6 +109,24 @@ export class GasTransactionService extends BaseService {
       .pipe(
         catchError(this.handleError)
       )
+
+    return await lastValueFrom(request)
+  }
+
+  public async DeleteTransactions(req: DeleteTransactionRequest): Promise<ApiResponse<BaseResponse>> {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'charset': 'utf8',
+        'accept': 'application/json'
+      }),
+      body: JSON.stringify(req)
+    }
+
+    const request = this.http.delete<ApiResponse<BaseResponse>>(this.BaseUrl + 'DeleteGasTransactions', options)
+      .pipe(
+        catchError(this.handleError)
+    )
 
     return await lastValueFrom(request)
   }

@@ -20,6 +20,10 @@ $theme: mat.define-theme();
     --mdc-fab-small-container-color: #7d00fa;
     --mat-icon-color: white;
   }
+  .fab-danger {
+    --mdc-fab-small-container-color: #fa0000;
+    --mat-icon-color: white;
+  }
 
   /*
     Beépített komponensek
@@ -195,34 +199,6 @@ body {
   display: block;
   overflow-x: scroll;
 }
-
-// .scroll-table {
-//   height: 400px;
-//   width: 550px;
-//   max-width: 100%;
-//   overflow: auto;
-// }
-
-// table {
-//   width: 800px;
-// }
-
-// td.mat-column-star {
-//   width: 20px;
-//   padding-right: 8px;
-// }
-
-// th.mat-column-position, td.mat-column-position {
-//   padding-left: 8px;
-// }
-
-// .mat-mdc-table-sticky-border-elem-right {
-//   border-left: 1px solid #e0e0e0;
-// }
-
-// .mat-mdc-table-sticky-border-elem-left {
-//   border-right: 1px solid #e0e0e0;
-// }
 
 .ag-axerp {
   display: inline-table;

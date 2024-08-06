@@ -1,22 +1,18 @@
 <div class="mat-elevation-z8 m25">
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Gas Transactions</h1>
-        
-        <button mat-mini-fab class="mr10 function-minifab-btn fab-primary" (click)="ImportGasTransactions()">
-            <mat-icon>description</mat-icon>
-        </button>
-        <button mat-flat-button class="mr10 function-normal-btn" (click)="ImportGasTransactions()">
-            <mat-icon>description</mat-icon>
-            <span class="function-btn-text">Import From Google Sheets</span>
-        </button>
 
-        <button mat-mini-fab class="mr10 function-minifab-btn fab-primary" (click)="ProcessBlobFiles()">
-            <mat-icon>dynamic_form</mat-icon>
-        </button>
-        <button mat-flat-button class="mr10 function-normal-btn" (click)="ProcessBlobFiles()">
-            <mat-icon>dynamic_form</mat-icon>
-            <span class="function-btn-text">Process Blob Files</span>
-        </button>
+        <app-manager-button icon="description" (btnClick)="ImportGasTransactions()">
+            Import From Google Sheets
+        </app-manager-button>
+
+        <app-manager-button icon="dynamic_form" (btnClick)="ProcessBlobFiles()">
+            Process Blob Files
+        </app-manager-button>
+
+        <app-manager-button color="danger" icon="delete" (btnClick)="DeleteSelectedTransactions()" [disabled]="SelectedIds.length === 0">
+            Delete Selected Transaction(s)
+        </app-manager-button>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
@@ -43,6 +39,7 @@
         [rowSelection]="'multiple'"
         [rowMultiSelectWithClick]="true"
         [suppressRowClickSelection]="false"
+        (rowSelected)="onRowSelected($event)"
         
         (paginationChanged)="onPaginationChanged($event)"
         (gridReady)="onGridReady($event)" />
