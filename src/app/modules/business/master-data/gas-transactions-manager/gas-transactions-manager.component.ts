@@ -56,6 +56,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   gridDiv = document.querySelector<HTMLElement>("#transactionsGrid")!;
 
   loading: boolean = true
+  operationIsInProgress: boolean = false
 
   gridModel: GridModel = new GridModel([])
   selection: SelectionModel<GasTransaction>
@@ -89,6 +90,10 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
       return []
     }
     return this.gridApi.getSelectedRows().map(x => x.DeliveryID)
+  }
+
+  get DisableManagerButtons(): boolean {
+    return this.operationIsInProgress || this.loading
   }
 
   constructor(
@@ -179,11 +184,18 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
       }
     })
     ref.afterClosed().subscribe(result => {
-      if (result) {
-        const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
-        dialogRef.afterClosed().subscribe(result => {
-          this.RefreshData()
-        })
+      try {
+        this.operationIsInProgress = true
+        if (result) {
+          const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
+          dialogRef.afterClosed().subscribe(result => {
+            this.operationIsInProgress = false
+            this.RefreshData()
+          })
+        }
+      } catch (error: any) {
+        this.operationIsInProgress = false
+        this.snackService.openError(error.message)
       }
     })
   }
@@ -197,10 +209,17 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
     ref.afterClosed().subscribe(result => {
       if (result) {
-        const dialogRef = this.dialog.open(ProcessBlobFilesDialogComponent)
-        dialogRef.afterClosed().subscribe(result => {
-          this.RefreshData()
-        })
+        this.operationIsInProgress = true
+        try {
+          const dialogRef = this.dialog.open(ProcessBlobFilesDialogComponent)
+          dialogRef.afterClosed().subscribe(result => {
+            this.operationIsInProgress = false
+            this.RefreshData()
+          })
+        } catch (error: any) {
+          this.snackService.openError(error.message)
+          this.operationIsInProgress = false
+        }
       }
     })
   }
@@ -218,12 +237,19 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
     ref.afterClosed().subscribe(result => {
       if (result) {
-        const dialogRef = this.dialog.open(DeleteTransactionsDialogComponent, {
-          data: new DeleteTransactionRequest(this.SelectedIds)
-        })
-        dialogRef.afterClosed().subscribe(result => {
-          this.RefreshData()
-        })
+        this.operationIsInProgress = true
+        try {
+          const dialogRef = this.dialog.open(DeleteTransactionsDialogComponent, {
+            data: new DeleteTransactionRequest(this.SelectedIds)
+          })
+          dialogRef.afterClosed().subscribe(result => {
+            this.operationIsInProgress = false
+            this.RefreshData()
+          })
+        } catch (error: any) {
+          this.snackService.openError(error.message)
+          this.operationIsInProgress = false
+        }
       }
     })
   }
