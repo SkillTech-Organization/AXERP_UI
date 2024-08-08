@@ -1,16 +1,16 @@
 import moment from 'moment'
 
 export interface IAppInsightsEntry {
-    TimeStamp: Date | null
-    RowNum: string
+    RowNum: number
     Message: string
+    TimeStamp: Date | null
 }
 
 export class AppInsightsEntry implements IAppInsightsEntry {
     public TimeStamp: Date | null
 
     constructor(
-        public RowNum: string,
+        public RowNum: number,
         public Message: string,
         private DateStamp: any
     ) {
