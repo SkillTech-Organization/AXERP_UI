@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { MockService } from '../../../services/mock.service';
+import { MockService } from '../../../../services/mock.service';
 import { GasTransaction } from '../models/GasTransaction';
-import { ColumnModel, ColumnTypes, ColumnTypeToAgFilter, GridModel } from '../../../../util/models/GridModel';
+import { ColumnModel, ColumnTypes, ColumnTypeToAgFilter, GridModel } from '../../../../../util/models/GridModel';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
@@ -11,9 +11,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { GasTransactionService } from '../services/gas-transaction.service';
-import { PagedQueryRequest } from '../../../../util/models/PagedQueryRequest';
+import { PagedQueryRequest } from '../../../../../util/models/PagedQueryRequest';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from '../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { ImportGasTransactionsDialogComponent } from '../dialogs/import-gas-transactions-dialog/import-gas-transactions-dialog.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '../../../../services/toast.service';
 import { ProcessBlobFilesDialogComponent } from '../dialogs/process-blob-files-dialog/process-blob-files-dialog.component';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 // import { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
@@ -31,7 +31,7 @@ import {
   GridReadyEvent,
 } from "ag-grid-community";
 import moment from 'moment';
-import { ManagerButtonComponent } from '../../../shared/buttons/manager-button/manager-button.component';
+import { ManagerButtonComponent } from '../../../../shared/buttons/manager-button/manager-button.component';
 import { DeleteTransactionsDialogComponent } from '../dialogs/delete-transactions-dialog/delete-transactions-dialog.component';
 import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
 
