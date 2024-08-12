@@ -2,20 +2,15 @@
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Logs</h1>
 
-        <!-- <app-manager-button icon="description" (btnClick)="ImportGasTransactions()"
-            [disabled]="DisableManagerButtons">
-            Import From Google Sheets
+        <app-manager-button icon="back" (btnClick)="pageBack()"
+            [disabled]="DisableManagerButtons || !CanPageBack">
+            Previous 100 Rows
         </app-manager-button>
 
-        <app-manager-button icon="dynamic_form" (btnClick)="ProcessBlobFiles()"
-            [disabled]="DisableManagerButtons">
-            Process Blob Files
+        <app-manager-button icon="next" (btnClick)="pageNext()"
+            [disabled]="DisableManagerButtons || !HasMorePages">
+            Next 100 Rows
         </app-manager-button>
-
-        <app-manager-button color="danger" icon="delete" (btnClick)="DeleteSelectedTransactions()"
-            [disabled]="DisableManagerButtons || SelectedIds.length === 0">
-            Delete Selected Transaction(s)
-        </app-manager-button> -->
     </mat-toolbar>
     
     <mat-divider></mat-divider>

@@ -63,8 +63,8 @@ export class AppInsightsViewComponent implements AfterViewInit {
   _defaultSort: string = 'TimeStamp'
   _activeColumns: string = ''
   _activeSort: string = this._defaultSort
-  _activePageIndex: number = 0
-  _activePageSize: number = 25
+  _activePageIndex: number = 1
+  _activePageSize: number = 100
   _orderByDesc: boolean = true
   _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""
@@ -73,9 +73,7 @@ export class AppInsightsViewComponent implements AfterViewInit {
       Page: this._activePageIndex + 1,
       OrderBy: this._activeSort,
       OrderByDesc: this._orderByDesc,
-      PageSize: 10000, // Ez this._activePageSize,
-      Columns: this._activeColumns,
-      Search: this._searchString
+      PageSize: this._activePageSize,
     } as PagedQueryRequest
   }
 
@@ -84,6 +82,14 @@ export class AppInsightsViewComponent implements AfterViewInit {
       return []
     }
     return this.gridApi.getSelectedRows().map(x => x.RowNum)
+  }
+
+  get CanPageBack(): boolean {
+    return this._activePageIndex > 1
+  }
+
+  get HasMorePages(): boolean {
+    return this._totalCount$.value > this._activePageIndex * this._activePageSize
   }
 
   get CurrentFilter(): FilterModel | undefined {
@@ -175,6 +181,21 @@ export class AppInsightsViewComponent implements AfterViewInit {
         }
     }
     return undefined
+  }
+
+  pageBack(): void {
+    if (this.CanPageBack) {
+      this._activePageIndex -= 1
+      this.RefreshData()
+    }
+  }
+
+  pageNext(): void {
+    console.log(this.gridApi.getFilterModel())
+    if (this.HasMorePages) {
+      this._activePageIndex += 1
+      this.RefreshData()
+    }
   }
 
 //   public ImportGasTransactions(): void {
