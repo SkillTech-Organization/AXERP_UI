@@ -4,6 +4,8 @@ export interface ImportGasTransactionResponse extends BaseResponse {
     TotalDataRowsInSheet: number;
     ImportedRows: number;
     InvalidRows: number;
-    NewRowsInsertedIntoDatabase: number;
+    NewRows: number;
+    UpdatedRows: number;
+    DeletedRows: number;
     ImportErrors: string[];
 }
