@@ -185,8 +185,8 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
     ref.afterClosed().subscribe(result => {
       try {
-        this.operationIsInProgress = true
         if (result) {
+          this.operationIsInProgress = true
           const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
           dialogRef.afterClosed().subscribe(result => {
             this.operationIsInProgress = false
