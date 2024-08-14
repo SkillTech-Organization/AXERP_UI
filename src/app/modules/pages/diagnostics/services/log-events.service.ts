@@ -8,14 +8,14 @@ import { ApiResponse } from "../../../../util/models/ApiResponse";
 import { BasePagedQueryResponse } from "../../../../util/models/BasePagedQueryResponse";
 import { PagedQueryRequest } from "../../../../util/models/PagedQueryRequest";
 import { ToastService } from "../../../services/toast.service";
-import { IAppInsightsEntry, AppInsightsEntry } from "../models/AppInsightsEntry";
+import { ILogEvent, LogEvent } from "../models/LogEvent";
 
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AppInsightsService extends BaseService {
+export class LogEventsService extends BaseService {
   private readonly BaseUrl = environment.apiUrl + 'api/';
 
   constructor(
@@ -25,13 +25,13 @@ export class AppInsightsService extends BaseService {
     super(snackService)
   }
 
-  public async QueryAppInsights(params?: PagedQueryRequest): Promise<ApiResponse<BasePagedQueryResponse<IAppInsightsEntry>>> {
+  public async QueryLogEvents(params?: PagedQueryRequest): Promise<ApiResponse<BasePagedQueryResponse<ILogEvent>>> {
     const queryParams = HelperFunctions.ParseObjectAsQueryString(params);
-    const request = this.http.get<ApiResponse<BasePagedQueryResponse<IAppInsightsEntry>>>(this.BaseUrl + 'QueryAppInsights?' + queryParams)
+    const request = this.http.get<ApiResponse<BasePagedQueryResponse<ILogEvent>>>(this.BaseUrl + 'QueryLogEvents?' + queryParams)
       .pipe(
         catchError(this.handleError),
         map(val => {
-          var res: ApiResponse<BasePagedQueryResponse<AppInsightsEntry>> = {
+          var res: ApiResponse<BasePagedQueryResponse<LogEvent>> = {
             ContentTypes: val.ContentTypes,
             DeclaredType: val.DeclaredType,
             Formatters: val.Formatters,
@@ -54,10 +54,14 @@ export class AppInsightsService extends BaseService {
             }
             if (v.Data?.length ?? 0 > 0) {
               v.Data?.forEach(element => {
-                res.Value?.Data?.push(new AppInsightsEntry(
-                  element.RowNum,
-                  element.Message,
-                  element.TimeStamp
+                res.Value?.Data?.push(new LogEvent(
+                  element.ProcessId,
+                  element.System,
+                  element.Function,
+                  element.Who,
+                  element.When,
+                  element.Description,
+                  element.Result
                 ))
               })
             }

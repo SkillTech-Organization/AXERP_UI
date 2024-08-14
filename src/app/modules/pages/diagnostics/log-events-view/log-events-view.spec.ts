@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppInsightsViewComponent } from './app-insights-view.component';
+import { EventLogViewComponent } from './log-events-view.component';
 
 describe('PocManagerComponent', () => {
-  let component: AppInsightsViewComponent;
-  let fixture: ComponentFixture<AppInsightsViewComponent>;
+  let component: EventLogViewComponent;
+  let fixture: ComponentFixture<EventLogViewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppInsightsViewComponent]
+      imports: [EventLogViewComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AppInsightsViewComponent);
+    fixture = TestBed.createComponent(EventLogViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

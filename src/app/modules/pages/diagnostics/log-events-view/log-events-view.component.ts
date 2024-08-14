@@ -7,9 +7,9 @@ import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatDialog } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
-import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
-import { MatInputModule } from "@angular/material/input";
+import { MatInput, MatInputModule } from "@angular/material/input";
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { AgGridAngular } from "ag-grid-angular";
@@ -26,13 +26,13 @@ import {
     GridReadyEvent,
     FilterModel
   } from "ag-grid-community";
-import { AppInsightsService } from "../services/app-insights.service";
-import { IAppInsightsEntry } from "../models/AppInsightsEntry";
+import { LogEventsService } from "../services/log-events.service";
+import { ILogEvent } from "../models/LogEvent";
 
 @Component({
-  selector: 'app-app-insights-view',
-  templateUrl: './app-insights-view.component.html',
-  styleUrl: './app-insights-view.component.scss',
+  selector: 'app-log-events-view',
+  templateUrl: './log-events-view.component.html',
+  styleUrl: './log-events-view.component.scss',
   standalone: true,
   imports: [
     CommonModule, MatToolbarModule, 
@@ -40,12 +40,13 @@ import { IAppInsightsEntry } from "../models/AppInsightsEntry";
     MatCheckboxModule, MatDividerModule, MatIconModule,
     FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatProgressSpinner,
-    AgGridAngular, ManagerButtonComponent
+    AgGridAngular, ManagerButtonComponent,
+    MatInput, MatFormField, MatLabel
   ],
   providers: [MockService]
 })
-export class AppInsightsViewComponent implements AfterViewInit {
-  private gridApi!: GridApi<IAppInsightsEntry>;
+export class EventLogViewComponent implements AfterViewInit {
+  private gridApi!: GridApi<ILogEvent>;
 
   gridDiv = document.querySelector<HTMLElement>("#appInsightsGrid")!;
 
@@ -53,19 +54,22 @@ export class AppInsightsViewComponent implements AfterViewInit {
   operationIsInProgress: boolean = false
 
   gridModel: GridModel = new GridModel([])
-  selection: SelectionModel<IAppInsightsEntry>
+  selection: SelectionModel<ILogEvent>
 
-  data: IAppInsightsEntry[] = []
+  data: ILogEvent[] = []
   colDefs: ColDef[] = []
-  
+
   readonly dialog = inject(MatDialog);
 
-  _defaultSort: string = 'TimeStamp'
+  _defaultSort: string = 'When'
   _activeColumns: string = ''
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 1
   _activePageSize: number = 100
   _orderByDesc: boolean = true
+  get _allPages(): number {
+    return Math.round(this._totalCount$.value / this._activePageSize)
+  }
   _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""
   get queryParams(): PagedQueryRequest {
@@ -81,7 +85,7 @@ export class AppInsightsViewComponent implements AfterViewInit {
     if (!this.gridApi) {
       return []
     }
-    return this.gridApi.getSelectedRows().map(x => x.RowNum)
+    return this.gridApi.getSelectedRows().map(x => x.ProcessId)
   }
 
   get CanPageBack(): boolean {
@@ -104,12 +108,12 @@ export class AppInsightsViewComponent implements AfterViewInit {
   }
 
   constructor(
-    private appInsightsService: AppInsightsService,
+    private appInsightsService: LogEventsService,
     private snackService: ToastService
   ) {
     const initialSelection: any[] = []
     const allowMultiSelect = false
-    this.selection = new SelectionModel<IAppInsightsEntry>(allowMultiSelect, initialSelection)
+    this.selection = new SelectionModel<ILogEvent>(allowMultiSelect, initialSelection)
   }
 
   setGridData() {
@@ -128,11 +132,11 @@ export class AppInsightsViewComponent implements AfterViewInit {
 
   //#region Business
 
-  private async RefreshData(): Promise<void> {
+  async RefreshData(): Promise<void> {
     try {
       this.loading = true
 
-      const data = await this.appInsightsService.QueryAppInsights(this.queryParams)
+      const data = await this.appInsightsService.QueryLogEvents(this.queryParams)
 
       if (!data.Value?.IsSuccess) {
         this.snackService.openError(data.Value?.RequestError ?? "Request (QueryIAppInsightsEntry) failed.")
@@ -141,6 +145,7 @@ export class AppInsightsViewComponent implements AfterViewInit {
         this.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
           this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
+          this.colDefs = []
           this.gridModel.Columns.forEach((element, index) => {
             this.colDefs.push({
               field: element.ColKey,
@@ -226,7 +231,7 @@ export class AppInsightsViewComponent implements AfterViewInit {
 
   //#region Grid events
 
-  onGridReady(params: GridReadyEvent<IAppInsightsEntry>) {
+  onGridReady(params: GridReadyEvent<ILogEvent>) {
     this.gridApi = params.api;
   }
 

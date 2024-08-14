@@ -18,6 +18,7 @@ export class ManagerButtonComponent {
   @Input() icon!: string
   @Input() disabled: boolean = false
   @Input() color: ButtonColor = 'primary'
+  @Input() mini: boolean = false
 
   @Output() btnClick: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>()
 

@@ -2,15 +2,21 @@
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Logs</h1>
 
-        <app-manager-button icon="back" (btnClick)="pageBack()"
+        <app-manager-button [mini]="true" icon="refresh" (btnClick)="RefreshData()"
+            [disabled]="DisableManagerButtons">
+        </app-manager-button>
+
+        <app-manager-button icon="arrow_back" (btnClick)="pageBack()"
             [disabled]="DisableManagerButtons || !CanPageBack">
             Previous 100 Rows
         </app-manager-button>
 
-        <app-manager-button icon="next" (btnClick)="pageNext()"
+        <app-manager-button icon="arrow_forward" (btnClick)="pageNext()"
             [disabled]="DisableManagerButtons || !HasMorePages">
             Next 100 Rows
         </app-manager-button>
+
+        <mat-label class="paginator-label">Total Count: {{_totalCount$ | async}} | Page: {{_activePageIndex}} \ {{_allPages}}</mat-label>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
@@ -25,7 +31,7 @@
         [rowData]="data"
         [columnDefs]="colDefs"
 
-        [pagination]="true"
+        [pagination]="false"
         [paginationPageSize]="_activePageSize"
         [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
         [paginationAutoPageSize]="false"

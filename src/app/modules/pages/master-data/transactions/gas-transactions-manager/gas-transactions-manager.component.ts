@@ -121,7 +121,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
 
   //#region Business
 
-  private async RefreshData(): Promise<void> {
+  async RefreshData(): Promise<void> {
     try {
       this.loading = true
 
@@ -134,6 +134,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
         this.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
           this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
+          this.colDefs = []
           this.gridModel.Columns.forEach((element, index) => {
             this.colDefs.push({
               field: element.ColKey,
