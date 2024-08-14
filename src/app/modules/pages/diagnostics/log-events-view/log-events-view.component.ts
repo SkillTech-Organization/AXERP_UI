@@ -200,44 +200,22 @@ export class EventLogViewComponent implements AfterViewInit {
     return undefined
   }
 
-  pageBack(): void {
+  pageBack(pages: number = 100): void {
+    this._activePageSize = pages
     if (this.CanPageBack) {
       this._activePageIndex -= 1
       this.RefreshData()
     }
   }
 
-  pageNext(): void {
+  pageNext(pages: number = 100): void {
+    this._activePageSize = pages
     console.log(this.gridApi.getFilterModel())
     if (this.HasMorePages) {
       this._activePageIndex += 1
       this.RefreshData()
     }
   }
-
-//   public ImportGasTransactions(): void {
-//     const ref = this.dialog.open(ConfirmationDialogComponent, {
-//       data: {
-//         title: "Confirmation",
-//         message: "Are you sure you want to import the Gas Transactions?"
-//       }
-//     })
-//     ref.afterClosed().subscribe(result => {
-//       try {
-//         this.operationIsInProgress = true
-//         if (result) {
-//           const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
-//           dialogRef.afterClosed().subscribe(result => {
-//             this.operationIsInProgress = false
-//             this.RefreshData()
-//           })
-//         }
-//       } catch (error: any) {
-//         this.operationIsInProgress = false
-//         this.snackService.openError(error.message)
-//       }
-//     })
-//   }
 
   //#endregion
 
