@@ -158,7 +158,9 @@ export class EventLogViewComponent implements AfterViewInit {
               headerCheckboxSelection: index == 0 ? true : false,
               checkboxSelection: index == 0 ? true : false,
 
-              valueFormatter: this.GetValueFormatter(element)
+              valueFormatter: this.GetValueFormatter(element),
+
+              minWidth: this.GetMinWidthForCol(element)
             } as ColDef);
           });
         }
@@ -172,6 +174,16 @@ export class EventLogViewComponent implements AfterViewInit {
     finally {
       this.loading = false
     }
+  }
+
+  private GetMinWidthForCol(element: ColumnModel) {
+    if (element.ColKey == "ProcessId") {
+      return 250
+    }
+    if (element.ColKey == "Description") {
+      return 1000
+    }
+    return 100
   }
 
   private GetValueFormatter(element: ColumnModel) {
