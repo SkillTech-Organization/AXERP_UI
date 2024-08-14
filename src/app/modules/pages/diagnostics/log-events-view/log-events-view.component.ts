@@ -190,7 +190,11 @@ export class EventLogViewComponent implements AfterViewInit {
     switch (element.ColumnType) {
       case ColumnTypes.number:
         return (params: any) => {
-          return params.value?.toFixed(2).toString().replace('.', ',')
+          if (params.value && params.value.toString().includes(',') || params.value.toString().includes('.')) {
+            return params.value?.toFixed(2).toString().replace('.', ',')
+          } else {
+            return params.value
+          }
         }
       case ColumnTypes.date:
         return (params: any) => {
