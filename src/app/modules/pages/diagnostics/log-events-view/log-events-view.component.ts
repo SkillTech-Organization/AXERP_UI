@@ -62,7 +62,7 @@ export class EventLogViewComponent implements AfterViewInit {
 
   readonly dialog = inject(MatDialog);
 
-  paginator: SimplePaginator = new SimplePaginator()
+  paginator: SimplePaginator = new SimplePaginator(1, 100, 0)
 
   _defaultSort: string = 'When'
   _activeColumns: string = ''
@@ -82,7 +82,7 @@ export class EventLogViewComponent implements AfterViewInit {
     if (!this.gridApi) {
       return []
     }
-    return this.gridApi.getSelectedRows().map(x => x.ProcessId)
+    return this.gridApi.getSelectedRows().filter(x => x.ProcessId !== undefined).map(x => x.ProcessId!)
   }
 
   get CurrentFilter(): FilterModel | undefined {

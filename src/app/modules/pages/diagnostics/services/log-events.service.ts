@@ -55,6 +55,7 @@ export class LogEventsService extends BaseService {
             if (v.Data?.length ?? 0 > 0) {
               v.Data?.forEach(element => {
                 res.Value?.Data?.push(new LogEvent(
+                  element.ID,
                   element.ProcessId,
                   element.System,
                   element.Function,

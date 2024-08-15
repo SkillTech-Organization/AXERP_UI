@@ -49,8 +49,22 @@ export class SimplePaginator {
 
     pageBack(pageSize: number = 100): void {
         const pageSizeChanged = this.PageSize !== pageSize
+        
         const oldSize = this.PageSize
+
+        const pageAmounts = oldSize * this.PageIndex
+        const pageAmountsNew = pageSize * this.PageIndex
+        
         this.PageSize = pageSize
+
+        if (pageSizeChanged) {
+            if (oldSize < this.PageSize) {
+                this.PageIndex = Math.round(pageAmountsNew / pageAmounts)
+            } else {
+                this.PageIndex *= Math.round(pageAmounts / pageAmountsNew)
+            }
+        }
+        
         if (this.CanPageBack) {
             this.PageIndex -= 1
             this._signal_changed()
@@ -59,8 +73,22 @@ export class SimplePaginator {
 
     pageNext(pageSize: number = 100): void {
         const pageSizeChanged = this.PageSize !== pageSize
+        
         const oldSize = this.PageSize
+        
+        const pageAmounts = oldSize * this.PageIndex
+        const pageAmountsNew = pageSize * this.PageIndex
+
         this.PageSize = pageSize
+
+        if (pageSizeChanged) {
+            if (oldSize < this.PageSize) {
+                this.PageIndex = Math.round(pageAmountsNew / pageAmounts)
+            } else {
+                this.PageIndex *= Math.round(pageAmounts / pageAmountsNew)
+            }
+        }
+        
         if (this.HasMorePages) {
             this.PageIndex += 1
             this._signal_changed()
