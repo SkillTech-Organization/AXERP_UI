@@ -6,35 +6,35 @@
             [disabled]="DisableManagerButtons">
         </app-manager-button>
 
-        <app-manager-button [mini]="true" icon="first_page" (btnClick)="pageFirst()"
-            [disabled]="DisableManagerButtons || IsFirstPage">
+        <app-manager-button [mini]="true" icon="first_page" (btnClick)="paginator.pageFirst()"
+            [disabled]="DisableManagerButtons || paginator.IsFirstPage">
         </app-manager-button>
 
-        <app-manager-button icon="arrow_back" (btnClick)="pageBack()"
-            [disabled]="DisableManagerButtons || !CanPageBack">
+        <app-manager-button icon="keyboard_double_arrow_left" (btnClick)="paginator.pageBack()"
+            [disabled]="DisableManagerButtons || !paginator.CanPageBack">
             Previous 100
         </app-manager-button>
 
-        <app-manager-button icon="arrow_back" (btnClick)="pageBack(10)"
-            [disabled]="DisableManagerButtons || !CanPageBack">
+        <app-manager-button icon="keyboard_arrow_left" (btnClick)="paginator.pageBack(10)"
+            [disabled]="DisableManagerButtons || !paginator.CanPageBack">
             Previous 10
         </app-manager-button>
 
-        <app-manager-button icon="arrow_forward" (btnClick)="pageNext(10)"
-            [disabled]="DisableManagerButtons || !HasMorePages">
+        <app-manager-button icon="keyboard_arrow_right" (btnClick)="paginator.pageNext(10)"
+            [disabled]="DisableManagerButtons || !paginator.HasMorePages">
             Next 10
         </app-manager-button>
 
-        <app-manager-button icon="arrow_forward" (btnClick)="pageNext()"
-            [disabled]="DisableManagerButtons || !HasMorePages">
+        <app-manager-button icon="keyboard_double_arrow_right" (btnClick)="paginator.pageNext()"
+            [disabled]="DisableManagerButtons || !paginator.HasMorePages">
             Next 100
         </app-manager-button>
 
-        <app-manager-button [mini]="true" icon="last_page" (btnClick)="pageLast()"
-            [disabled]="DisableManagerButtons || IsLastPage">
+        <app-manager-button [mini]="true" icon="last_page" (btnClick)="paginator.pageLast()"
+            [disabled]="DisableManagerButtons || paginator.IsLastPage">
         </app-manager-button>
 
-        <mat-label class="paginator-label">Total Count: {{_totalCount$ | async}} | Page: {{_activePageIndex}} \ {{_allPages}}</mat-label>
+        <mat-label class="paginator-label">{{paginator.Label}}</mat-label>
     </mat-toolbar>
     
     <mat-divider></mat-divider>
@@ -50,7 +50,7 @@
         [columnDefs]="colDefs"
 
         [pagination]="false"
-        [paginationPageSize]="_activePageSize"
+        [paginationPageSize]="paginator.PageSize"
         [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
         [paginationAutoPageSize]="false"
 

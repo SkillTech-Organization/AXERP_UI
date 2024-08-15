@@ -28,6 +28,7 @@ import {
   } from "ag-grid-community";
 import { LogEventsService } from "../services/log-events.service";
 import { ILogEvent } from "../models/LogEvent";
+import { SimplePaginator } from "../../../../util/managers/SimplePaginator";
 
 @Component({
   selector: 'app-log-events-view',
@@ -61,23 +62,19 @@ export class EventLogViewComponent implements AfterViewInit {
 
   readonly dialog = inject(MatDialog);
 
+  paginator: SimplePaginator = new SimplePaginator()
+
   _defaultSort: string = 'When'
   _activeColumns: string = ''
   _activeSort: string = this._defaultSort
-  _activePageIndex: number = 1
-  _activePageSize: number = 100
   _orderByDesc: boolean = true
-  get _allPages(): number {
-    return Math.round(this._totalCount$.value / this._activePageSize)
-  }
-  _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""
   get queryParams(): PagedQueryRequest {
     return {
-      Page: this._activePageIndex + 1,
+      Page: this.paginator.PageIndex,
       OrderBy: this._activeSort,
       OrderByDesc: this._orderByDesc,
-      PageSize: this._activePageSize,
+      PageSize: this.paginator.PageSize,
     } as PagedQueryRequest
   }
 
@@ -86,22 +83,6 @@ export class EventLogViewComponent implements AfterViewInit {
       return []
     }
     return this.gridApi.getSelectedRows().map(x => x.ProcessId)
-  }
-
-  get CanPageBack(): boolean {
-    return this._activePageIndex > 1
-  }
-
-  get HasMorePages(): boolean {
-    return this._activePageIndex < this._allPages
-  }
-
-  get IsLastPage(): boolean {
-    return this._activePageIndex === this._allPages
-  }
-
-  get IsFirstPage(): boolean {
-    return this._activePageIndex < 2
   }
 
   get CurrentFilter(): FilterModel | undefined {
@@ -122,12 +103,15 @@ export class EventLogViewComponent implements AfterViewInit {
     const initialSelection: any[] = []
     const allowMultiSelect = false
     this.selection = new SelectionModel<ILogEvent>(allowMultiSelect, initialSelection)
+    this.paginator.PaginationChanged.subscribe(event => {
+      this.RefreshData()
+    })
   }
 
   setGridData() {
     this.gridApi.setGridOption("rowData", this.data);
     this.gridApi.setGridOption("columnDefs", this.colDefs);
-    this.gridApi.setGridOption("paginationPageSize", this._activePageSize);
+    this.gridApi.setGridOption("paginationPageSize", this.paginator.PageSize);
   }
 
   //#region Lifecycle
@@ -172,7 +156,7 @@ export class EventLogViewComponent implements AfterViewInit {
             } as ColDef);
           });
         }
-        this._totalCount$.next(data.Value?.TotalCount ?? 0)
+        this.paginator.TotalCount = data.Value?.TotalCount ?? 0
         this.setGridData()
       }
     }
@@ -210,37 +194,6 @@ export class EventLogViewComponent implements AfterViewInit {
         }
     }
     return undefined
-  }
-
-  pageBack(pages: number = 100): void {
-    this._activePageSize = pages
-    if (this.CanPageBack) {
-      this._activePageIndex -= 1
-      this.RefreshData()
-    }
-  }
-
-  pageNext(pages: number = 100): void {
-    this._activePageSize = pages
-    console.log(this.gridApi.getFilterModel())
-    if (this.HasMorePages) {
-      this._activePageIndex += 1
-      this.RefreshData()
-    }
-  }
-
-  pageFirst(): void {
-    if (!this.IsFirstPage) {
-      this._activePageIndex = 1
-      this.RefreshData()
-    }
-  }
-
-  pageLast(): void {
-    if (!this.IsLastPage) {
-      this._activePageIndex = this._allPages
-      this.RefreshData()
-    }
   }
 
   //#endregion
