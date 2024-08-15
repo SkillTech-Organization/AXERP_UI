@@ -93,7 +93,15 @@ export class EventLogViewComponent implements AfterViewInit {
   }
 
   get HasMorePages(): boolean {
-    return this._totalCount$.value > this._activePageIndex * this._activePageSize
+    return this._activePageIndex < this._allPages
+  }
+
+  get IsLastPage(): boolean {
+    return this._activePageIndex === this._allPages
+  }
+
+  get IsFirstPage(): boolean {
+    return this._activePageIndex < 2
   }
 
   get CurrentFilter(): FilterModel | undefined {
@@ -217,6 +225,20 @@ export class EventLogViewComponent implements AfterViewInit {
     console.log(this.gridApi.getFilterModel())
     if (this.HasMorePages) {
       this._activePageIndex += 1
+      this.RefreshData()
+    }
+  }
+
+  pageFirst(): void {
+    if (!this.IsFirstPage) {
+      this._activePageIndex = 1
+      this.RefreshData()
+    }
+  }
+
+  pageLast(): void {
+    if (!this.IsLastPage) {
+      this._activePageIndex = this._allPages
       this.RefreshData()
     }
   }

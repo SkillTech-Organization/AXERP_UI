@@ -6,24 +6,32 @@
             [disabled]="DisableManagerButtons">
         </app-manager-button>
 
+        <app-manager-button [mini]="true" icon="first_page" (btnClick)="pageFirst()"
+            [disabled]="DisableManagerButtons || IsFirstPage">
+        </app-manager-button>
+
         <app-manager-button icon="arrow_back" (btnClick)="pageBack()"
             [disabled]="DisableManagerButtons || !CanPageBack">
-            Previous 100 Rows
+            Previous 100
         </app-manager-button>
 
         <app-manager-button icon="arrow_back" (btnClick)="pageBack(10)"
             [disabled]="DisableManagerButtons || !CanPageBack">
-            Previous 10 Rows
+            Previous 10
         </app-manager-button>
 
         <app-manager-button icon="arrow_forward" (btnClick)="pageNext(10)"
             [disabled]="DisableManagerButtons || !HasMorePages">
-            Next 10 Rows
+            Next 10
         </app-manager-button>
 
         <app-manager-button icon="arrow_forward" (btnClick)="pageNext()"
             [disabled]="DisableManagerButtons || !HasMorePages">
-            Next 100 Rows
+            Next 100
+        </app-manager-button>
+
+        <app-manager-button [mini]="true" icon="last_page" (btnClick)="pageLast()"
+            [disabled]="DisableManagerButtons || IsLastPage">
         </app-manager-button>
 
         <mat-label class="paginator-label">Total Count: {{_totalCount$ | async}} | Page: {{_activePageIndex}} \ {{_allPages}}</mat-label>
