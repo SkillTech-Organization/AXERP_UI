@@ -147,7 +147,9 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
               headerCheckboxSelection: index == 0 ? true : false,
               checkboxSelection: index == 0 ? true : false,
 
-              valueFormatter: this.GetValueFormatter(element)
+              valueFormatter: this.GetValueFormatter(element),
+
+              suppressMovable: true
             } as ColDef);
           });
         }

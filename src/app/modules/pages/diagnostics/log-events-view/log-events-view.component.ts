@@ -152,7 +152,9 @@ export class EventLogViewComponent implements AfterViewInit {
 
               valueFormatter: this.GetValueFormatter(element),
 
-              minWidth: this.GetMinWidthForCol(element)
+              minWidth: this.GetMinWidthForCol(element),
+
+              suppressMovable: true
             } as ColDef);
           });
         }
