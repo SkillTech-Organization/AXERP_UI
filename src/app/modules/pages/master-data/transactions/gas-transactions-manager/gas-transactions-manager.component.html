@@ -2,6 +2,10 @@
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Gas Transactions</h1>
 
+        <app-manager-button [mini]="true" icon="refresh" (btnClick)="RefreshData()"
+            [disabled]="DisableManagerButtons">
+        </app-manager-button>
+
         <app-manager-button icon="description" (btnClick)="ImportGasTransactions()"
             [disabled]="DisableManagerButtons">
             Import From Google Sheets

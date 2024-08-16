@@ -1,4 +1,5 @@
-import { BaseResponse } from "../../../../util/models/BaseResponse";
+import { BaseResponse } from "../../../../../util/models/BaseResponse";
+
 
 export interface ImportGasTransactionResponse extends BaseResponse {
     TotalDataRowsInSheet: number;

@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
-import { ImportStatisticsSnackbarComponent } from '../shared/snackbars/import-statistics-snackbar/import-statistics-snackbar.component';
-import { ImportGasTransactionResponse } from '../business/master-data/models/ImportGasTransactionResponse';
-import { GasTransactionBlobProcessingStatisticsSnackbarComponent } from '../shared/snackbars/gas-transaction-blob-processing-statistics-snackbar/gas-transaction-blob-processing-statistics-snackbar.component';
-import { ProcessBlobFilesResponse } from '../business/master-data/models/ProcessBlobFilesResponse';
+import { Injectable } from "@angular/core"
+import { MatSnackBar, MatSnackBarConfig } from "@angular/material/snack-bar"
+import { ImportGasTransactionResponse } from "../pages/master-data/transactions/models/ImportGasTransactionResponse"
+import { ProcessBlobFilesResponse } from "../pages/master-data/transactions/models/ProcessBlobFilesResponse"
+import { GasTransactionBlobProcessingStatisticsSnackbarComponent } from "../pages/master-data/transactions/snackbars/gas-transaction-blob-processing-statistics-snackbar/gas-transaction-blob-processing-statistics-snackbar.component"
+import { ImportStatisticsSnackbarComponent } from "../pages/master-data/transactions/snackbars/import-statistics-snackbar/import-statistics-snackbar.component"
 
 export enum ToastrTypes {
   info = "snackbar-info",

@@ -1,13 +1,21 @@
-<button mat-mini-fab class="mr10 function-minifab-btn"
-    [ngClass]="{'fab-primary': color == 'primary', 'fab-danger': color == 'danger'}"
-    (click)="clicked($event)" [disabled]="disabled">
-    <mat-icon>{{icon}}</mat-icon>
-</button>
-<button mat-flat-button class="mr10 function-normal-btn"
-    [ngClass]="{'error': color == 'danger'}"
-    (click)="clicked($event)" [disabled]="disabled">
-    <mat-icon>{{icon}}</mat-icon>
-    <span class="function-btn-text">
-        <ng-content></ng-content>
-    </span>
-</button>
+@if (!mini) {
+    <button mat-mini-fab class="mr10 function-minifab-btn"
+        [ngClass]="{'fab-primary': color == 'primary', 'fab-danger': color == 'danger'}"
+        (click)="clicked($event)" [disabled]="disabled">
+        <mat-icon>{{icon}}</mat-icon>
+    </button>
+    <button mat-flat-button class="mr10 function-normal-btn"
+        [ngClass]="{'error': color == 'danger'}"
+        (click)="clicked($event)" [disabled]="disabled">
+        <mat-icon>{{icon}}</mat-icon>
+        <span class="function-btn-text">
+            <ng-content></ng-content>
+        </span>
+    </button>
+} @else {
+    <button mat-mini-fab class="mr10"
+        [ngClass]="{'fab-primary': color == 'primary', 'fab-danger': color == 'danger'}"
+        (click)="clicked($event)" [disabled]="disabled">
+        <mat-icon>{{icon}}</mat-icon>
+    </button>
+}

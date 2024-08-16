@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { GasTransaction } from '../business/master-data/models/GasTransaction';
 import { of } from 'rxjs';
+import { GasTransaction } from '../pages/master-data/transactions/models/GasTransaction';
 
 @Injectable({
   providedIn: 'root'

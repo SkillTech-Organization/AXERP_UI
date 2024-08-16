@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { GasTransactionService } from '../../services/gas-transaction.service';
-import { ToastService } from '../../../../services/toast.service';
-import { LoadingSpinnerDialogContentComponent } from '../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content';
+import { Component, OnInit, inject } from "@angular/core";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ToastService } from "../../../../../services/toast.service";
+import { LoadingSpinnerDialogContentComponent } from "../../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content";
+import { GasTransactionService } from "../../services/gas-transaction.service";
+
 
 @Component({
   selector: 'app-delete-transactions-dialog',

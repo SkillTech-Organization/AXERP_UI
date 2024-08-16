@@ -1,12 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { inject } from '@angular/core';
-import {
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { GasTransactionService } from '../../services/gas-transaction.service';
-import { ImportGasTransactionResponse } from '../../models/ImportGasTransactionResponse';
-import { ToastrTypes, ToastService } from '../../../../services/toast.service';
-import { LoadingSpinnerDialogContentComponent } from '../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content';
+import { Component, OnInit, inject } from "@angular/core";
+import { MatDialogRef } from "@angular/material/dialog";
+import { ToastService, ToastrTypes } from "../../../../../services/toast.service";
+import { LoadingSpinnerDialogContentComponent } from "../../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content";
+import { ImportGasTransactionResponse } from "../../models/ImportGasTransactionResponse";
+import { GasTransactionService } from "../../services/gas-transaction.service";
+
 
 @Component({
   selector: 'app-import-gas-transactions-dialog',
