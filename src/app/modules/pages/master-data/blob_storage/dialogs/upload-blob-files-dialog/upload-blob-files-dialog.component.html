@@ -4,12 +4,13 @@
     <hr/>
 
     <div class="input-row">
-        <form class="file-upload-form" [formGroup]="form">
+        <!--TODO: kell-e folder input?-->
+        <!-- <form class="file-upload-form" [formGroup]="form">
             <mat-form-field appearance="outline" class="small-form-field">
                 <mat-label>Blob storage folder</mat-label>
                 <input matInput formControlName="folderName" placeholder="Ex. import, stored...">
             </mat-form-field>
-        </form>
+        </form> -->
 
         <app-file-upload-input (fileSelected)="onFileSelected($event)"></app-file-upload-input>
     </div>
@@ -36,12 +37,4 @@
         [disabled]="DisableDialogButtons">
         Cancel
     </app-manager-button>
-    
-    @if(uploading) {
-        <hr/>
-
-        <app-loading-spinner-dialog-content>
-            Uploading file...
-        </app-loading-spinner-dialog-content>
-    }
 </div>

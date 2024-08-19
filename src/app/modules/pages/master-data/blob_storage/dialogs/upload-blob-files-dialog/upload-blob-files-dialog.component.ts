@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from "@angular/core";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { ToastService } from "../../../../../services/toast.service";
 import { LoadingSpinnerDialogContentComponent } from "../../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content";
 import { BlobStorageService } from "../../services/blob-storage.service";
@@ -10,9 +10,9 @@ import { BlobUploadFile } from "../../models/BlobUploadFile";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { LoadingSpinnerDialogComponent } from "../../../../../shared/dialogs/loading-spinner-dialog/loading-spinner-dialog.component";
 
 
-//TODO: make generic upload dialog
 @Component({
   selector: 'app-upload-blob-files-dialog',
   standalone: true,
@@ -26,13 +26,15 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 export class UploadBlobFilesDialogComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<UploadBlobFilesDialogComponent>);
 
-  file: File | null = null; // Variable to store file
+  readonly dialog = inject(MatDialog);
+
+  file: File | null = null;
 
   loading: boolean = false
   uploading: boolean = false
 
   form: FormGroup = new FormGroup({
-    folderName: new FormControl(undefined)
+    folderName: new FormControl('import')
   })
 
   get DisableDialogButtons(): boolean {
@@ -46,9 +48,7 @@ export class UploadBlobFilesDialogComponent implements OnInit {
 
   }
 
-  async ngOnInit(): Promise<void> {
-
-  }
+  async ngOnInit(): Promise<void> {}
 
   onFileSelected(event: any) {
     const file: File = event;
@@ -61,9 +61,11 @@ export class UploadBlobFilesDialogComponent implements OnInit {
   async onUpload() {
     this.uploading = true
     try {
+      var spinnerRef = this.dialog.open(LoadingSpinnerDialogComponent, { data: "Uploading file..." })
       const response = await this.service.UploadBlobFile(new UploadBlobFileRequest(
         new BlobUploadFile(this.file!.name, this.form.controls["folderName"].value, this.file!)
       ))
+      spinnerRef.close()
       if (response?.Value) {
         const importResponse = response?.Value
 
@@ -71,9 +73,9 @@ export class UploadBlobFilesDialogComponent implements OnInit {
           this.snackService.openError(importResponse.RequestError ?? "Upload failed! Internal Server Error")
         } else {
           this.snackService.openInfo('Upload was successful!')
+          this.dialogRef.close(true);
         }
       }
-      this.dialogRef.close(true);
     } catch(error) {
       this.snackService.openError(error)
     }
