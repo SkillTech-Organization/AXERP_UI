@@ -79,6 +79,11 @@ $theme: mat.define-theme();
     --mat-snack-bar-button-color: rgb(211, 208, 255);
   }
 
+  .small-form-field {
+    max-height: 60px;
+    max-width: 200px;
+  }
+
   /*
     Responsivity
   */
@@ -189,6 +194,14 @@ body {
 
 .center-spinner {
   margin: auto;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    column-gap: 15px;
+    align-content: center;
 }
 
 /*

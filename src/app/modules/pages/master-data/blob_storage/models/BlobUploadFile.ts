@@ -4,7 +4,7 @@ export class BlobUploadFile extends BlobFile {
     constructor(
         FileName: string,
         Folder: string = "",
-        public Content: any
+        public Content: File
     ) {
         super(FileName, Folder)
     }

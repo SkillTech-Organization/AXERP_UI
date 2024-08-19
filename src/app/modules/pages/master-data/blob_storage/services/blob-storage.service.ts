@@ -11,6 +11,7 @@ import { PagedQueryRequest } from "../../../../../util/models/PagedQueryRequest"
 import { ToastService } from "../../../../services/toast.service";
 import { BlobFile } from "../models/BlobFile";
 import { DeleteBlobFilesRequest } from "../models/DeleteBlobFilesRequest";
+import { UploadBlobFileRequest } from "../models/UploadBlobFileRequest";
 
 
 @Injectable({
@@ -81,6 +82,23 @@ export class BlobStorageService extends BaseService {
     }
 
     const request = this.http.delete<ApiResponse<BaseResponse>>(this.BaseUrl + 'DeleteBlobFiles', options)
+      .pipe(
+        catchError(this.handleError)
+      )
+
+    return await lastValueFrom(request)
+  }
+
+  public async UploadBlobFile(req: UploadBlobFileRequest): Promise<ApiResponse<BaseResponse>> {
+    const formData = new FormData()
+
+    if (req.Data.Folder) {
+      formData.append("file", req.Data.Content, `${req.Data.Folder}/${req.Data.FileName}`)
+    } else {
+      formData.append("file", req.Data.Content, `${req.Data.FileName}`)
+    }
+
+    const request = this.http.post<ApiResponse<BaseResponse>>(this.BaseUrl + 'UploadBlobFile', formData)
       .pipe(
         catchError(this.handleError)
       )

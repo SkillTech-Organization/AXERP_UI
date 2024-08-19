@@ -31,6 +31,7 @@ import { BlobStorageService } from '../services/blob-storage.service';
 import { ConfirmationDialogComponent } from '../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
 import { DeleteBlobFilesRequest } from '../models/DeleteBlobFilesRequest';
 import { DeleteBlobFilesDialogComponent } from '../dialogs/delete-blob-files-dialog/delete-blob-files-dialog.component';
+import { UploadBlobFilesDialogComponent } from '../dialogs/upload-blob-files-dialog/upload-blob-files-dialog.component';
 
 @Component({
   selector: 'app-blob-files-view',
@@ -214,7 +215,19 @@ export class BlobFilesViewComponent implements AfterViewInit {
   }
 
   public UploadBlobFile(): void {
-
+    this.operationIsInProgress = true
+    try {
+      const dialogRef = this.dialog.open(UploadBlobFilesDialogComponent, {
+        //data: new DeleteBlobFilesRequest(this.SelectedBlobFiles)
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        this.operationIsInProgress = false
+        this.RefreshData()
+      })
+    } catch (error: any) {
+      this.snackService.openError(error.message)
+      this.operationIsInProgress = false
+    }
   }
 
   //#endregion
