@@ -28,6 +28,9 @@ import moment from 'moment';
 import { ManagerButtonComponent } from '../../../../shared/buttons/manager-button/manager-button.component';
 import { BlobFile } from '../models/BlobFile';
 import { BlobStorageService } from '../services/blob-storage.service';
+import { ConfirmationDialogComponent } from '../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DeleteBlobFilesRequest } from '../models/DeleteBlobFilesRequest';
+import { DeleteBlobFilesDialogComponent } from '../dialogs/delete-blob-files-dialog/delete-blob-files-dialog.component';
 
 @Component({
   selector: 'app-blob-files-view',
@@ -84,6 +87,13 @@ export class BlobFilesViewComponent implements AfterViewInit {
       return []
     }
     return this.gridApi.getSelectedRows().map(x => x.Folder + "/" + x.FileName)
+  }
+
+  get SelectedBlobFiles(): BlobFile[] {
+    if (!this.gridApi) {
+      return []
+    }
+    return this.gridApi.getSelectedRows().map(x => new BlobFile(x.FileName, x.Folder))
   }
 
   get DisableManagerButtons(): boolean {
@@ -173,35 +183,39 @@ export class BlobFilesViewComponent implements AfterViewInit {
     return undefined
   }
 
-  // public DeleteSelectedTransactions(): void {
-  //   if (this.SelectedIds.length === 0) {
-  //     this.snackService.openWarning("At least one row must be selected for delete")
-  //     return
-  //   }
-  //   const ref = this.dialog.open(ConfirmationDialogComponent, {
-  //     data: {
-  //       title: "Confirmation",
-  //       message: "Are you sure you want to delete the selected transaction(s)?"
-  //     }
-  //   })
-  //   ref.afterClosed().subscribe(result => {
-  //     if (result) {
-  //       this.operationIsInProgress = true
-  //       try {
-  //         const dialogRef = this.dialog.open(DeleteTransactionsDialogComponent, {
-  //           data: new DeleteTransactionRequest(this.SelectedIds)
-  //         })
-  //         dialogRef.afterClosed().subscribe(result => {
-  //           this.operationIsInProgress = false
-  //           this.RefreshData()
-  //         })
-  //       } catch (error: any) {
-  //         this.snackService.openError(error.message)
-  //         this.operationIsInProgress = false
-  //       }
-  //     }
-  //   })
-  // }
+  public DeleteSelectedBlobFiles(): void {
+    if (this.SelectedIds.length === 0) {
+      this.snackService.openWarning("At least one row must be selected for delete")
+      return
+    }
+    const ref = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Confirmation",
+        message: "Are you sure you want to delete the selected file(s)?"
+      }
+    })
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        this.operationIsInProgress = true
+        try {
+          const dialogRef = this.dialog.open(DeleteBlobFilesDialogComponent, {
+            data: new DeleteBlobFilesRequest(this.SelectedBlobFiles)
+          })
+          dialogRef.afterClosed().subscribe(result => {
+            this.operationIsInProgress = false
+            this.RefreshData()
+          })
+        } catch (error: any) {
+          this.snackService.openError(error.message)
+          this.operationIsInProgress = false
+        }
+      }
+    })
+  }
+
+  public UploadBlobFile(): void {
+
+  }
 
   //#endregion
 

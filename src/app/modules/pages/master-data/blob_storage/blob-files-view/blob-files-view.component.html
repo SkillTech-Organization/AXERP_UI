@@ -6,20 +6,15 @@
             [disabled]="DisableManagerButtons">
         </app-manager-button>
 
-        <!-- <app-manager-button icon="description" (btnClick)="ImportGasTransactions()"
+        <app-manager-button icon="description" (btnClick)="UploadBlobFile()"
             [disabled]="DisableManagerButtons">
-            Import From Google Sheets
+            Upload File
         </app-manager-button>
 
-        <app-manager-button icon="dynamic_form" (btnClick)="ProcessBlobFiles()"
+        <app-manager-button icon="dynamic_form" (btnClick)="DeleteSelectedBlobFiles()"
             [disabled]="DisableManagerButtons">
-            Process Blob Files
+            Delete Selected File(s)
         </app-manager-button>
-
-        <app-manager-button color="danger" icon="delete" (btnClick)="DeleteSelectedTransactions()"
-            [disabled]="DisableManagerButtons || SelectedIds.length === 0">
-            Delete Selected Transaction(s)
-        </app-manager-button> -->
     </mat-toolbar>
     
     <mat-divider></mat-divider>

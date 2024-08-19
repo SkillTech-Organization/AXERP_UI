@@ -1,5 +1,5 @@
 import { BlobFile } from "./BlobFile";
 
-export interface DeleteBlobFilesRequest {
-    Items: BlobFile[]
+export class DeleteBlobFilesRequest {
+    constructor(public Items: BlobFile[]) {}
 }
