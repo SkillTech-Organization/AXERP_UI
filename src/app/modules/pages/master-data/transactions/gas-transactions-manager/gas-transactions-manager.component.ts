@@ -171,7 +171,11 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
         }
       case ColumnTypes.date:
         return (params: any) => {
-          return moment(params.value).format('DD/M/yyyy hh:mm')
+          if (params.value) {
+            return moment(params.value).format('DD/M/yyyy hh:mm')
+          } else {
+            return undefined
+          }
         }
     }
     return undefined
