@@ -1,0 +1,44 @@
+<div class="mat-elevation-z8 m25">
+    <mat-toolbar class="secondary manager-toolbar">
+        <h1 class="mr10">Blob Files</h1>
+
+        <app-manager-button [mini]="true" icon="refresh" (btnClick)="RefreshData()"
+            [disabled]="DisableManagerButtons">
+        </app-manager-button>
+
+        <app-manager-button icon="description" (btnClick)="UploadBlobFile()"
+            [disabled]="DisableManagerButtons">
+            Upload File
+        </app-manager-button>
+
+        <app-manager-button icon="dynamic_form" (btnClick)="DeleteSelectedBlobFiles()"
+            [disabled]="DisableManagerButtons">
+            Delete Selected File(s)
+        </app-manager-button>
+    </mat-toolbar>
+    
+    <mat-divider></mat-divider>
+
+    <ag-grid-angular
+        #transactionsGrid
+
+        [loading]="loading"
+
+        class="ag-theme-quartz ag-axerp" 
+
+        [rowData]="data"
+        [columnDefs]="colDefs"
+
+        [pagination]="true"
+        [paginationPageSize]="_activePageSize"
+        [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
+        [paginationAutoPageSize]="false"
+        
+        [rowSelection]="'multiple'"
+        [rowMultiSelectWithClick]="true"
+        [suppressRowClickSelection]="false"
+        (rowSelected)="onRowSelected($event)"
+        
+        (paginationChanged)="onPaginationChanged($event)"
+        (gridReady)="onGridReady($event)" />
+</div>

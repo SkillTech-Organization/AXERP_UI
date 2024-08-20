@@ -1,6 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { MockService } from '../../../../services/mock.service';
-import { GasTransaction } from '../models/GasTransaction';
 import { ColumnModel, ColumnTypes, ColumnTypeToAgFilter, GridModel } from '../../../../../util/models/GridModel';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -10,11 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { GasTransactionService } from '../services/gas-transaction.service';
 import { PagedQueryRequest } from '../../../../../util/models/PagedQueryRequest';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmationDialogComponent } from '../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
-import { ImportGasTransactionsDialogComponent } from '../dialogs/import-gas-transactions-dialog/import-gas-transactions-dialog.component';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -22,9 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { ToastService } from '../../../../services/toast.service';
-import { ProcessBlobFilesDialogComponent } from '../dialogs/process-blob-files-dialog/process-blob-files-dialog.component';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-// import { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
 import {
   ColDef,
   GridApi,
@@ -32,16 +26,20 @@ import {
 } from "ag-grid-community";
 import moment from 'moment';
 import { ManagerButtonComponent } from '../../../../shared/buttons/manager-button/manager-button.component';
-import { DeleteTransactionsDialogComponent } from '../dialogs/delete-transactions-dialog/delete-transactions-dialog.component';
-import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
+import { BlobFile } from '../models/BlobFile';
+import { BlobStorageService } from '../services/blob-storage.service';
+import { ConfirmationDialogComponent } from '../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component';
+import { DeleteBlobFilesRequest } from '../models/DeleteBlobFilesRequest';
+import { DeleteBlobFilesDialogComponent } from '../dialogs/delete-blob-files-dialog/delete-blob-files-dialog.component';
+import { UploadBlobFilesDialogComponent } from '../dialogs/upload-blob-files-dialog/upload-blob-files-dialog.component';
 
 @Component({
-  selector: 'app-gas-transactions-manager',
-  templateUrl: './gas-transactions-manager.component.html',
-  styleUrl: './gas-transactions-manager.component.scss',
+  selector: 'app-blob-files-view',
+  templateUrl: './blob-files-view.component.html',
+  styleUrl: './blob-files-view.component.scss',
   standalone: true,
   imports: [
-    CommonModule, MatToolbarModule, 
+    CommonModule, MatToolbarModule,
     MatCardModule, MatButtonModule,
     MatCheckboxModule, MatDividerModule, MatIconModule,
     FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule,
@@ -50,8 +48,8 @@ import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
   ],
   providers: [MockService]
 })
-export class GasTransactionsManagerComponent implements AfterViewInit {
-  private gridApi!: GridApi<GasTransaction>;
+export class BlobFilesViewComponent implements AfterViewInit {
+  private gridApi!: GridApi<BlobFile>;
 
   gridDiv = document.querySelector<HTMLElement>("#transactionsGrid")!;
 
@@ -59,15 +57,15 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   operationIsInProgress: boolean = false
 
   gridModel: GridModel = new GridModel([])
-  selection: SelectionModel<GasTransaction>
+  selection: SelectionModel<BlobFile>
 
-  data: GasTransaction[] = []
+  data: BlobFile[] = []
   colDefs: ColDef[] = []
-  
+
   readonly dialog = inject(MatDialog);
 
-  _defaultSort: string = 'DeliveryID'
-  _activeColumns: string = '' // 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
+  _defaultSort: string = 'FileName'
+  _activeColumns: string = ''
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 0
   _activePageSize: number = 25
@@ -79,7 +77,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
       Page: this._activePageIndex + 1,
       OrderBy: this._activeSort,
       OrderByDesc: this._orderByDesc,
-      PageSize: 10000, // Ez this._activePageSize,
+      PageSize: 10000,
       Columns: this._activeColumns,
       Search: this._searchString
     } as PagedQueryRequest
@@ -89,7 +87,14 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     if (!this.gridApi) {
       return []
     }
-    return this.gridApi.getSelectedRows().map(x => x.DeliveryID)
+    return this.gridApi.getSelectedRows().map(x => x.Folder + "/" + x.FileName)
+  }
+
+  get SelectedBlobFiles(): BlobFile[] {
+    if (!this.gridApi) {
+      return []
+    }
+    return this.gridApi.getSelectedRows().map(x => new BlobFile(x.FileName, x.Folder))
   }
 
   get DisableManagerButtons(): boolean {
@@ -97,12 +102,12 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   }
 
   constructor(
-    private gasTransactionService: GasTransactionService,
+    private blobStorageService: BlobStorageService,
     private snackService: ToastService
   ) {
     const initialSelection: any[] = []
     const allowMultiSelect = false
-    this.selection = new SelectionModel<GasTransaction>(allowMultiSelect, initialSelection)
+    this.selection = new SelectionModel<BlobFile>(allowMultiSelect, initialSelection)
   }
 
   setGridData() {
@@ -125,7 +130,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     try {
       this.loading = true
 
-      const data = await this.gasTransactionService.QueryGasTransactions(this.queryParams)
+      const data = await this.blobStorageService.QueryBlobFiles(this.queryParams)
 
       if (!data.Value?.IsSuccess) {
         this.snackService.openError(data.Value?.RequestError ?? "Request (QueryGasTransactions) failed.")
@@ -138,16 +143,18 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
           this.gridModel.Columns.forEach((element, index) => {
             this.colDefs.push({
               field: element.ColKey,
-              
+
               headerName: element.Title,
-              
+
               filter: ColumnTypeToAgFilter[element.ColumnType],
               floatingFilter: true,
 
               headerCheckboxSelection: index == 0 ? true : false,
               checkboxSelection: index == 0 ? true : false,
 
-              valueFormatter: this.GetValueFormatter(element)
+              valueFormatter: this.GetValueFormatter(element),
+
+              width: 1000
             } as ColDef);
           });
         }
@@ -171,65 +178,13 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
         }
       case ColumnTypes.date:
         return (params: any) => {
-          if (params.value) {
-            return moment(params.value).format('DD/M/yyyy hh:mm')
-          } else {
-            return undefined
-          }
+          return moment(params.value).format('DD/M/yyyy hh:mm')
         }
     }
     return undefined
   }
 
-  public ImportGasTransactions(): void {
-    const ref = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        title: "Confirmation",
-        message: "Are you sure you want to import the Gas Transactions?"
-      }
-    })
-    ref.afterClosed().subscribe(result => {
-      try {
-        if (result) {
-          this.operationIsInProgress = true
-          const dialogRef = this.dialog.open(ImportGasTransactionsDialogComponent)
-          dialogRef.afterClosed().subscribe(result => {
-            this.operationIsInProgress = false
-            this.RefreshData()
-          })
-        }
-      } catch (error: any) {
-        this.operationIsInProgress = false
-        this.snackService.openError(error.message)
-      }
-    })
-  }
-
-  public ProcessBlobFiles(): void {
-    const ref = this.dialog.open(ConfirmationDialogComponent, {
-      data: {
-        title: "Confirmation",
-        message: "Are you sure you want to process the blob files?"
-      }
-    })
-    ref.afterClosed().subscribe(result => {
-      if (result) {
-        this.operationIsInProgress = true
-        try {
-          const dialogRef = this.dialog.open(ProcessBlobFilesDialogComponent)
-          dialogRef.afterClosed().subscribe(result => {
-            this.operationIsInProgress = false
-            this.RefreshData()
-          })
-        } catch (error: any) {
-          this.snackService.openError(error.message)
-          this.operationIsInProgress = false
-        }
-      }
-    })
-  }
-
-  public DeleteSelectedTransactions(): void {
+  public DeleteSelectedBlobFiles(): void {
     if (this.SelectedIds.length === 0) {
       this.snackService.openWarning("At least one row must be selected for delete")
       return
@@ -237,15 +192,15 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     const ref = this.dialog.open(ConfirmationDialogComponent, {
       data: {
         title: "Confirmation",
-        message: "Are you sure you want to delete the selected transaction(s)?"
+        message: "Are you sure you want to delete the selected file(s)?"
       }
     })
     ref.afterClosed().subscribe(result => {
       if (result) {
         this.operationIsInProgress = true
         try {
-          const dialogRef = this.dialog.open(DeleteTransactionsDialogComponent, {
-            data: new DeleteTransactionRequest(this.SelectedIds)
+          const dialogRef = this.dialog.open(DeleteBlobFilesDialogComponent, {
+            data: new DeleteBlobFilesRequest(this.SelectedBlobFiles)
           })
           dialogRef.afterClosed().subscribe(result => {
             this.operationIsInProgress = false
@@ -259,11 +214,27 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
     })
   }
 
+  public UploadBlobFile(): void {
+    this.operationIsInProgress = true
+    try {
+      const dialogRef = this.dialog.open(UploadBlobFilesDialogComponent, {
+        //data: new DeleteBlobFilesRequest(this.SelectedBlobFiles)
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        this.operationIsInProgress = false
+        this.RefreshData()
+      })
+    } catch (error: any) {
+      this.snackService.openError(error.message)
+      this.operationIsInProgress = false
+    }
+  }
+
   //#endregion
 
   //#region Grid events
 
-  onGridReady(params: GridReadyEvent<GasTransaction>) {
+  onGridReady(params: GridReadyEvent<BlobFile>) {
     this.gridApi = params.api;
   }
 

@@ -2,8 +2,8 @@ import moment from 'moment'
 
 export interface IGasTransaction {
     DeliveryID: string
-    DateLoadedEnd: Date | null
-    DateDelivered: Date | null
+    DateLoadedEnd?: Date
+    DateDelivered?: Date
     SalesContractID: string | null
     SalesStatus: string | null
     Terminal: string | null
@@ -23,9 +23,9 @@ export interface IGasTransaction {
     StorageCharge: number | null
     OtherCharges: number | null
     Sales: number | null
-    CMR: Date | null
+    CMR?: Date
     BioMWh: number | null
-    BillOfLading: Date | null
+    BillOfLading?: Date
     BioAddendum: string | null
     Comment: string | null
     CustomerNote: string | null
@@ -39,10 +39,10 @@ export interface IGasTransaction {
 }
 
 export class GasTransaction implements IGasTransaction {
-    public DateLoadedEnd: Date | null
-    public DateDelivered: Date | null
-    public CMR: Date | null
-    public BillOfLading: Date | null
+    public DateLoadedEnd?: Date
+    public DateDelivered?: Date
+    public CMR?: Date
+    public BillOfLading?: Date
 
     constructor(
         public DeliveryID: string,
@@ -85,11 +85,11 @@ export class GasTransaction implements IGasTransaction {
 
         // TODO: avoid client-side conversion
 
-        this.DateLoadedEnd = moment(_DateLoadedEnd).isValid() ? moment(_DateLoadedEnd).toDate() : null
-        this.DateDelivered = moment(_DateDelivered).isValid() ? moment(_DateDelivered).toDate() : null
+        this.DateLoadedEnd = moment(_DateLoadedEnd).isValid() ? moment(_DateLoadedEnd).toDate() : undefined
+        this.DateDelivered = moment(_DateDelivered).isValid() ? moment(_DateDelivered).toDate() : undefined
         
-        this.CMR = moment(_CMR).isValid() ? moment(_CMR).toDate() : null
+        this.CMR = moment(_CMR).isValid() ? moment(_CMR).toDate() : undefined
         
-        this.BillOfLading = moment(_BillOfLading).isValid() ? moment(_BillOfLading).toDate() : null
+        this.BillOfLading = moment(_BillOfLading).isValid() ? moment(_BillOfLading).toDate() : undefined
     }
 }
