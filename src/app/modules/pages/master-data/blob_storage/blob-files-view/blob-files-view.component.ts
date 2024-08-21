@@ -21,6 +21,7 @@ import { ToastService } from '../../../../services/toast.service';
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import {
   ColDef,
+  DomLayoutType,
   GridApi,
   GridReadyEvent,
 } from "ag-grid-community";
@@ -58,6 +59,7 @@ export class BlobFilesViewComponent implements AfterViewInit {
 
   gridModel: GridModel = new GridModel([])
   selection: SelectionModel<BlobFile>
+  domLayout: DomLayoutType = "autoHeight";
 
   data: BlobFile[] = []
   colDefs: ColDef[] = []
@@ -68,7 +70,7 @@ export class BlobFilesViewComponent implements AfterViewInit {
   _activeColumns: string = ''
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 0
-  _activePageSize: number = 25
+  _activePageSize: number = 10
   _orderByDesc: boolean = false
   _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""

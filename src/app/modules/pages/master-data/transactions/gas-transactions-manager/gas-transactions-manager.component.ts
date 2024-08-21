@@ -27,6 +27,7 @@ import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 // import { ColDef } from 'ag-grid-community'; // Column Definition Type Interface
 import {
   ColDef,
+  DomLayoutType,
   GridApi,
   GridReadyEvent,
 } from "ag-grid-community";
@@ -60,6 +61,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
 
   gridModel: GridModel = new GridModel([])
   selection: SelectionModel<GasTransaction>
+  domLayout: DomLayoutType = "autoHeight";
 
   data: GasTransaction[] = []
   colDefs: ColDef[] = []
@@ -70,7 +72,7 @@ export class GasTransactionsManagerComponent implements AfterViewInit {
   _activeColumns: string = '' // 'DeliveryID,DateLoadedEnd,DateDelivered,SalesContractID,QtyLoaded,Sales,Terminal'
   _activeSort: string = this._defaultSort
   _activePageIndex: number = 0
-  _activePageSize: number = 25
+  _activePageSize: number = 10
   _orderByDesc: boolean = false
   _totalCount$: BehaviorSubject<number> = new BehaviorSubject<number>(0)
   _searchString: string = ""

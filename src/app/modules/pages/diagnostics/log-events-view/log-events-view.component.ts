@@ -24,7 +24,8 @@ import {
     ColDef,
     GridApi,
     GridReadyEvent,
-    FilterModel
+    FilterModel,
+    DomLayoutType
   } from "ag-grid-community";
 import { LogEventsService } from "../services/log-events.service";
 import { ILogEvent } from "../models/LogEvent";
@@ -56,6 +57,7 @@ export class EventLogViewComponent implements AfterViewInit {
 
   gridModel: GridModel = new GridModel([])
   selection: SelectionModel<ILogEvent>
+  domLayout: DomLayoutType = "autoHeight";
 
   data: ILogEvent[] = []
   colDefs: ColDef[] = []
