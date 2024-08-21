@@ -35,17 +35,14 @@ export class ImportGasTransactionsDialogComponent implements OnInit {
       if (!importResponse.IsSuccess) {
         this.snackService.openError(importResponse.RequestError ?? "Internal Server Error")
       } else {
-        if (importResponse.InvalidRows === 0 && importResponse.ImportedRows === importResponse.NewRows) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.info, 'Success!')
-        }
-        else if (importResponse.InvalidRows === 0 && importResponse.ImportedRows >= importResponse.NewRows) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.warning, 'Warning! Import succeeded but some rows were already in the database.')
+        if (importResponse.InvalidRows === 0) {
+          this.snackService.openInfo('Import successful!')
         }
         else if (importResponse.InvalidRows > 0) {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.error, 'Error!')
+          this.snackService.openWarning('One or more rows could not be imported!')
         }
-        else {
-          this.snackService.openImportStatistics(importResponse, ToastrTypes.error, 'Error! Invalid import statistics.')
+        else if (importResponse.ImportedRows > 0 && importResponse.InvalidRows == importResponse.ImportedRows) {
+          this.snackService.openError('Error! No row could be imported!')
         }
       }
     }

@@ -24,15 +24,18 @@
     
     <mat-divider></mat-divider>
 
+    <!-- class ag-axerp -->
     <ag-grid-angular
         #transactionsGrid
 
         [loading]="loading"
 
-        class="ag-theme-quartz ag-axerp" 
+        class="ag-theme-quartz" 
 
         [rowData]="data"
         [columnDefs]="colDefs"
+
+        [domLayout]="domLayout"
 
         [pagination]="true"
         [paginationPageSize]="_activePageSize"
