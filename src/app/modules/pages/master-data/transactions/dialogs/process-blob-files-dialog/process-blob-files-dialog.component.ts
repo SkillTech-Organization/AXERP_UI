@@ -36,13 +36,13 @@ export class ProcessBlobFilesDialogComponent implements OnInit {
         this.snackService.openError(importResponse.RequestError ?? "Internal Server Error")
       } else {
         if (importResponse.Errors.length === 0) {
-          this.snackService.openBlobStatistics(importResponse, ToastrTypes.info, 'Success!')
+          this.snackService.openInfo('Files processed successfully!')
         }
         else if (importResponse.Errors.length > 0 && importResponse.Processed.length > 0) {
-          this.snackService.openBlobStatistics(importResponse, ToastrTypes.warning, 'Not all blob files could be processed!')
+          this.snackService.openWarning('Some files could not be processed!')
         }
         else if (importResponse.Errors.length > 0 && importResponse.Processed.length === 0) {
-          this.snackService.openBlobStatistics(importResponse, ToastrTypes.error, 'Error!')
+          this.snackService.openError('Error! No file could be processed!')
         }
       }
     }
