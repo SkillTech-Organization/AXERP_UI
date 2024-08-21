@@ -1,11 +1,9 @@
-import { SelectionModel } from "@angular/cdk/collections";
 import { CommonModule } from "@angular/common";
-import { Component, AfterViewInit, inject } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { MatDialog } from "@angular/material/dialog";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatIconModule } from "@angular/material/icon";
@@ -14,7 +12,6 @@ import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { AgGridAngular } from "ag-grid-angular";
 import moment from "moment";
-import { BehaviorSubject } from "rxjs";
 import { GridModel, ColumnTypeToAgFilter, ColumnModel, ColumnTypes } from "../../../../util/models/GridModel";
 import { PagedQueryRequest } from "../../../../util/models/PagedQueryRequest";
 import { MockService } from "../../../services/mock.service";
@@ -22,14 +19,11 @@ import { ToastService } from "../../../services/toast.service";
 import { ManagerButtonComponent } from "../../../shared/buttons/manager-button/manager-button.component";
 import {
     ColDef,
-    GridApi,
-    GridReadyEvent,
-    FilterModel,
-    DomLayoutType
-  } from "ag-grid-community";
+    FilterModel  } from "ag-grid-community";
 import { LogEventsService } from "../services/log-events.service";
 import { ILogEvent } from "../models/LogEvent";
 import { SimplePaginator } from "../../../../util/managers/SimplePaginator";
+import { BaseGridViewComponent } from "../../../shared/pages/base-grid-view/base-grid-view.component";
 
 @Component({
   selector: 'app-log-events-view',
@@ -47,31 +41,10 @@ import { SimplePaginator } from "../../../../util/managers/SimplePaginator";
   ],
   providers: [MockService]
 })
-export class EventLogViewComponent implements AfterViewInit {
-  private gridApi!: GridApi<ILogEvent>;
-
-  gridDiv = document.querySelector<HTMLElement>("#appInsightsGrid")!;
-
-  loading: boolean = true
-  operationIsInProgress: boolean = false
-
-  gridModel: GridModel = new GridModel([])
-  selection: SelectionModel<ILogEvent>
-  domLayout: DomLayoutType = "autoHeight";
-
-  data: ILogEvent[] = []
-  colDefs: ColDef[] = []
-
-  readonly dialog = inject(MatDialog);
-
-  paginator: SimplePaginator = new SimplePaginator(1, 100, 0)
-
-  _defaultSort: string = 'When'
-  _activeColumns: string = ''
-  _activeSort: string = this._defaultSort
-  _orderByDesc: boolean = true
-  _searchString: string = ""
-  get queryParams(): PagedQueryRequest {
+export class EventLogViewComponent extends BaseGridViewComponent<ILogEvent> implements AfterViewInit {
+  override gridDiv = document.querySelector<HTMLElement>("#appInsightsGrid")!;
+  override _defaultSort: string = 'When'
+  override get queryParams(): PagedQueryRequest {
     return {
       Page: this.paginator.PageIndex,
       OrderBy: this._activeSort,
@@ -79,6 +52,8 @@ export class EventLogViewComponent implements AfterViewInit {
       PageSize: this.paginator.PageSize,
     } as PagedQueryRequest
   }
+
+  paginator: SimplePaginator = new SimplePaginator(1, 100, 0)
 
   get SelectedIds(): number[] {
     if (!this.gridApi) {
@@ -102,18 +77,12 @@ export class EventLogViewComponent implements AfterViewInit {
     private appInsightsService: LogEventsService,
     private snackService: ToastService
   ) {
-    const initialSelection: any[] = []
-    const allowMultiSelect = false
-    this.selection = new SelectionModel<ILogEvent>(allowMultiSelect, initialSelection)
+    super()
+    this._activeSort = this._defaultSort
+    this._orderByDesc = true
     this.paginator.PaginationChanged.subscribe(event => {
       this.RefreshData()
     })
-  }
-
-  setGridData() {
-    this.gridApi.setGridOption("rowData", this.data);
-    this.gridApi.setGridOption("columnDefs", this.colDefs);
-    this.gridApi.setGridOption("paginationPageSize", this.paginator.PageSize);
   }
 
   //#region Lifecycle
@@ -180,7 +149,7 @@ export class EventLogViewComponent implements AfterViewInit {
     return 100
   }
 
-  private GetValueFormatter(element: ColumnModel) {
+  override GetValueFormatter(element: ColumnModel) {
     switch (element.ColumnType) {
       case ColumnTypes.number:
         return (params: any) => {
@@ -196,22 +165,6 @@ export class EventLogViewComponent implements AfterViewInit {
         }
     }
     return undefined
-  }
-
-  //#endregion
-
-  //#region Grid events
-
-  onGridReady(params: GridReadyEvent<ILogEvent>) {
-    this.gridApi = params.api;
-  }
-
-  onPaginationChanged(event: any) {
-    //console.log("onPaginationPageLoaded: ", event);
-  }
-
-  onRowSelected(event: any) {
-    //console.log("onRowSelected: ", event, this.SelectedIds)
   }
 
   //#endregion
