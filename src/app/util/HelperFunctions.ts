@@ -36,4 +36,20 @@ export module HelperFunctions {
 
         return queryParams;
     }
+
+    export function OrderBy<T>(array: T[], propertyName: string, defaultValue?: any, desc: boolean = false): T[] {
+        var modifier = !desc ? 1 : -1;
+        return array.sort((a, b) => {
+            var _a = a[propertyName as keyof T] ?? defaultValue
+            var _b = b[propertyName as keyof T] ?? defaultValue
+
+            if (_a === _b) {
+                return 0
+            }
+            if (_a > _b) {
+                return 1 * modifier
+            }
+            return -1 * modifier
+        })
+    }
 }

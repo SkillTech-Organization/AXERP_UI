@@ -26,6 +26,7 @@ import { DeleteBlobFilesRequest } from '../models/DeleteBlobFilesRequest';
 import { DeleteBlobFilesDialogComponent } from '../dialogs/delete-blob-files-dialog/delete-blob-files-dialog.component';
 import { UploadBlobFilesDialogComponent } from '../dialogs/upload-blob-files-dialog/upload-blob-files-dialog.component';
 import { BaseGridViewComponent } from '../../../../shared/pages/base-grid-view/base-grid-view.component';
+import { HelperFunctions } from '../../../../../util/HelperFunctions';
 
 @Component({
   selector: 'app-blob-files-view',
@@ -94,25 +95,7 @@ export class BlobFilesViewComponent extends BaseGridViewComponent<BlobFile> impl
       else if (data) {
         this.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
-          this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
-          this.colDefs = []
-          this.gridModel.Columns.forEach((element, index) => {
-            this.colDefs.push({
-              field: element.ColKey,
-
-              headerName: element.Title,
-
-              filter: ColumnTypeToAgFilter[element.ColumnType],
-              floatingFilter: true,
-
-              headerCheckboxSelection: index == 0 ? true : false,
-              checkboxSelection: index == 0 ? true : false,
-
-              valueFormatter: this.GetValueFormatter(element),
-
-              width: 1000
-            } as ColDef);
-          });
+          this.ProcessColumnData(data?.Value?.Columns)
         }
         this._totalCount$.next(data.Value?.TotalCount ?? 0)
         this.setGridData()

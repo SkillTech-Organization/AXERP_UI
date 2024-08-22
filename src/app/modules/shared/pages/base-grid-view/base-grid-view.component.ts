@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import { ColumnModel, ColumnTypes, GridModel } from '../../../../util/models/GridModel';
+import { ColumnModel, ColumnTypes, ColumnTypeToAgFilter, GridModel } from '../../../../util/models/GridModel';
 import { PagedQueryRequest } from '../../../../util/models/PagedQueryRequest';
 import {
   ColDef,
@@ -11,6 +11,8 @@ import {
   GridReadyEvent,
 } from "ag-grid-community";
 import moment from 'moment';
+import { HelperFunctions } from '../../../../util/HelperFunctions';
+import { ColumnData } from '../../../../util/models/ColumnData';
 
 @Component({
   selector: 'app-base-grid-view',
@@ -59,6 +61,31 @@ export class BaseGridViewComponent<T> {
     const initialSelection: any[] = []
     const allowMultiSelect = false
     this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection)
+  }
+
+  public ProcessColumnData(cols: ColumnData[]): void {
+    this.gridModel = GridModel.FromColumnDatas(cols)
+    this.colDefs = []
+    HelperFunctions.OrderBy(this.gridModel.Columns, 'Order', 0).forEach((element, index) => {
+      this.colDefs.push({
+        field: element.ColKey,
+
+        headerName: element.Title,
+
+        filter: ColumnTypeToAgFilter[element.ColumnType],
+        floatingFilter: true,
+
+        headerCheckboxSelection: index == 0 ? true : false,
+        checkboxSelection: index == 0 ? true : false,
+
+        valueFormatter: this.GetValueFormatter(element),
+
+        minWidth: element.MinWidth,
+        maxWidth: element.MaxWidth,
+
+        width: (element.MinWidth && element.MaxWidth) ? undefined : 1000
+      } as ColDef)
+    })
   }
 
   setGridData() {

@@ -88,23 +88,7 @@ export class GasTransactionsManagerComponent extends BaseGridViewComponent<GasTr
       else if (data) {
         this.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
-          this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
-          this.colDefs = []
-          this.gridModel.Columns.forEach((element, index) => {
-            this.colDefs.push({
-              field: element.ColKey,
-              
-              headerName: element.Title,
-              
-              filter: ColumnTypeToAgFilter[element.ColumnType],
-              floatingFilter: true,
-
-              headerCheckboxSelection: index == 0 ? true : false,
-              checkboxSelection: index == 0 ? true : false,
-
-              valueFormatter: this.GetValueFormatter(element)
-            } as ColDef);
-          });
+          this.ProcessColumnData(data?.Value?.Columns)
         }
         this._totalCount$.next(data.Value?.TotalCount ?? 0)
         this.setGridData()

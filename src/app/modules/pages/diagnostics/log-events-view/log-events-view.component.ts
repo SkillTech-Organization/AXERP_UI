@@ -24,6 +24,8 @@ import { LogEventsService } from "../services/log-events.service";
 import { ILogEvent } from "../models/LogEvent";
 import { SimplePaginator } from "../../../../util/managers/SimplePaginator";
 import { BaseGridViewComponent } from "../../../shared/pages/base-grid-view/base-grid-view.component";
+import { HelperFunctions } from "../../../../util/HelperFunctions";
+import { ColumnData } from "../../../../util/models/ColumnData";
 
 @Component({
   selector: 'app-log-events-view',
@@ -107,25 +109,7 @@ export class EventLogViewComponent extends BaseGridViewComponent<ILogEvent> impl
       else if (data) {
         this.data = data?.Value?.Data ?? []
         if (data?.Value?.Columns) {
-          this.gridModel = GridModel.FromColumnDatas(data.Value.Columns)
-          this.colDefs = []
-          this.gridModel.Columns.forEach((element, index) => {
-            this.colDefs.push({
-              field: element.ColKey,
-              
-              headerName: element.Title,
-              
-              filter: ColumnTypeToAgFilter[element.ColumnType],
-              floatingFilter: true,
-
-              headerCheckboxSelection: index == 0 ? true : false,
-              checkboxSelection: index == 0 ? true : false,
-
-              valueFormatter: this.GetValueFormatter(element),
-
-              minWidth: this.GetMinWidthForCol(element)
-            } as ColDef);
-          });
+          this.ProcessColumnData(data?.Value?.Columns)
         }
         this.paginator.TotalCount = data.Value?.TotalCount ?? 0
         this.setGridData()
