@@ -28,8 +28,8 @@ export class MockService {
     return of(this.mockData[idx]).toPromise()
   }
 
-  public DeleteData(id: string): Promise<boolean | undefined> {
-    var idx = this.mockData.findIndex(x => x.DeliveryID === id)
+  public DeleteData(id: number, idSffx: string): Promise<boolean | undefined> {
+    var idx = this.mockData.findIndex(x => x.DeliveryID === id && x.DeliveryIDSffx === idSffx)
     this.mockData.splice(idx, 1)
     return of(true).toPromise()
   }

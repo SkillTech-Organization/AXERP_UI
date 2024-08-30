@@ -1,7 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { MockService } from '../../../../services/mock.service';
 import { GasTransaction } from '../models/GasTransaction';
-import { ColumnTypeToAgFilter, GridModel } from '../../../../../util/models/GridModel';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,6 +26,8 @@ import { ManagerButtonComponent } from '../../../../shared/buttons/manager-butto
 import { DeleteTransactionsDialogComponent } from '../dialogs/delete-transactions-dialog/delete-transactions-dialog.component';
 import { DeleteTransactionRequest } from '../models/DeleteTransactionRequest';
 import { BaseGridViewComponent } from '../../../../shared/pages/base-grid-view/base-grid-view.component';
+import { ColumnModel, ColumnTypes } from '../../../../../util/models/GridModel';
+import moment from 'moment';
 
 @Component({
   selector: 'app-gas-transactions-manager',
@@ -51,7 +52,7 @@ export class GasTransactionsManagerComponent extends BaseGridViewComponent<GasTr
     if (!this.gridApi) {
       return []
     }
-    return this.gridApi.getSelectedRows().map(x => x.DeliveryID)
+    return this.gridApi.getSelectedRows().map(x => x.DeliveryID + x.DeliveryIDSffx)
   }
 
   get DisableManagerButtons(): boolean {
@@ -100,6 +101,25 @@ export class GasTransactionsManagerComponent extends BaseGridViewComponent<GasTr
     finally {
       this.loading = false
     }
+  }
+
+  override GetValueFormatter(element: ColumnModel) {
+    if (element.Title === "Delivery ID") {
+      return (params: any) => {
+        return params.value
+      }
+    }
+    switch (element.ColumnType) {
+      case ColumnTypes.number:
+        return (params: any) => {
+          return params.value?.toFixed(2).toString().replace('.', ',')
+        }
+      case ColumnTypes.date:
+        return (params: any) => {
+          return moment(params.value).format('DD/M/yyyy hh:mm')
+        }
+    }
+    return undefined
   }
 
   public ImportGasTransactions(): void {

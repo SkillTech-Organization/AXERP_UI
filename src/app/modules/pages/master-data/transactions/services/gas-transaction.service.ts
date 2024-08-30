@@ -59,6 +59,7 @@ export class GasTransactionService extends BaseService {
               v.Data?.forEach(element => {
                 res.Value?.Data?.push(new GasTransaction(
                   element.DeliveryID,
+                  element.DeliveryIDSffx,
                   element.DateLoadedEnd,
                   element.DateDelivered,
                   element.SalesContractID,
@@ -92,7 +93,8 @@ export class GasTransactionService extends BaseService {
                   element.Reference3,
                   element.BLFilename,
                   element.TruckLoadingCompanyComment,
-                  element.TruckCompany
+                  element.TruckCompany,
+                  element.AXERPHash
                 ))
               })
             }

@@ -1,7 +1,8 @@
 import moment from 'moment'
 
 export interface IGasTransaction {
-    DeliveryID: string
+    DeliveryID: number
+    DeliveryIDSffx: string
     DateLoadedEnd?: Date
     DateDelivered?: Date
     SalesContractID: string | null
@@ -36,6 +37,7 @@ export interface IGasTransaction {
     BLFilename: string | null
     TruckLoadingCompanyComment: string | null
     TruckCompany: string | null
+    AXERPHash: string
 }
 
 export class GasTransaction implements IGasTransaction {
@@ -45,7 +47,8 @@ export class GasTransaction implements IGasTransaction {
     public BillOfLading?: Date
 
     constructor(
-        public DeliveryID: string,
+        public DeliveryID: number,
+        public DeliveryIDSffx: string,
         private _DateLoadedEnd: any,
         private _DateDelivered: any,
         public SalesContractID: string | null,
@@ -80,6 +83,7 @@ export class GasTransaction implements IGasTransaction {
         public BLFilename: string | null,
         public TruckLoadingCompanyComment: string | null,
         public TruckCompany: string | null,
+        public AXERPHash: string
     ) {
         moment.locale('en-EN')
 
