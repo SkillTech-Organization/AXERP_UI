@@ -1,19 +1,37 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="primary example-toolbar">
-    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    @if(loginDisplay) {
+      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    }
     <h1 class="example-app-name">{{name + ' - v' + version}}</h1>
+
+    @if (!loginDisplay) {
+    <button mat-raised-button [matMenuTriggerFor]="loginMenu">Login</button>
+    }
+    <mat-menu #loginMenu="matMenu">
+      <button mat-menu-item (click)="loginRedirect()">Login using Redirect</button>
+      <button mat-menu-item (click)="loginPopup()">Login using Popup</button>
+    </mat-menu>
+
+    @if (loginDisplay) {
+    <button mat-raised-button [matMenuTriggerFor]="logoutMenu">Logout</button>
+    }
+    <mat-menu #logoutMenu="matMenu">
+      <button mat-menu-item (click)="logout()">Logout using Redirect</button>
+      <button mat-menu-item (click)="logout(true)">Logout using Popup</button>
+    </mat-menu>
   </mat-toolbar>
 
   <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
       fixedTopGap="56">
       <mat-nav-list>
-
-        <a mat-list-item routerLink="home"><mat-icon>home</mat-icon>Home</a>
-        <a mat-list-item routerLink="business/transactions/gas-transactions"><mat-icon>water</mat-icon>Gas Transactions</a>
-        <a mat-list-item routerLink="business/blob/blob-files"><mat-icon>description</mat-icon>Blob Files</a>
-        <a mat-list-item routerLink="diagnostics/monitoring/logs"><mat-icon>menu_open</mat-icon>Logs</a>
-
+        @if(loginDisplay) {
+          <a mat-list-item routerLink="home"><mat-icon>home</mat-icon>Home</a>
+          <a mat-list-item routerLink="business/transactions/gas-transactions"><mat-icon>water</mat-icon>Gas Transactions</a>
+          <a mat-list-item routerLink="business/blob/blob-files"><mat-icon>description</mat-icon>Blob Files</a>
+          <a mat-list-item routerLink="diagnostics/monitoring/logs"><mat-icon>menu_open</mat-icon>Logs</a>
+        }
       </mat-nav-list>
     </mat-sidenav>
 
