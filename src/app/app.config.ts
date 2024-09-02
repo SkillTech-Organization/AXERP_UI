@@ -51,7 +51,7 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: [...environment.apiConfig.scopes],
+      scopes: [], // ...environment.apiConfig.scopes
     },
     loginFailedRoute: '/login-failed',
   };
