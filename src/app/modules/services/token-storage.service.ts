@@ -12,7 +12,6 @@ export class TokenStorageService {
 
   get user(): LoginUser | null {
     const userJson = window.sessionStorage.getItem(USER_KEY);
-    //console.log("get user: ", userJson);
     if (userJson !== null && userJson !== undefined) {
       return JSON.parse(userJson) as LoginUser;
     }
@@ -20,7 +19,6 @@ export class TokenStorageService {
   }
 
   set user(newUser: LoginUser | null) {
-    console.log("set user: ", newUser);
     if (newUser !== undefined && newUser !== null) {
       window.sessionStorage.removeItem(USER_KEY);
       window.sessionStorage.setItem(USER_KEY, newUser !== null && newUser !== undefined ? JSON.stringify(newUser) : newUser);
