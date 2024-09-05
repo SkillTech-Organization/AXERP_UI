@@ -8,6 +8,7 @@ import { MsalInterceptorConfiguration, MsalGuardConfiguration, MSAL_GUARD_CONFIG
 import { LogLevel, IPublicClientApplication, PublicClientApplication, BrowserCacheLocation, InteractionType } from '@azure/msal-browser';
 import { environment } from '../environments/environment.development';
 import { authInterceptorProviders } from './util/interceptors/auth.interceptor';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
@@ -87,6 +88,7 @@ export const appConfig: ApplicationConfig = {
     MsalService,
     MsalGuard,
     MsalBroadcastService,
-    authInterceptorProviders
+    authInterceptorProviders,
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ]
 };
