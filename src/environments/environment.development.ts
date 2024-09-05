@@ -1,13 +1,13 @@
 export const environment = {
-    apiUrl: "https://axerpazurefunctiontest.azurewebsites.net/", // http://localhost:7071/ // https://axerpazurefunctiontest.azurewebsites.net/
+    apiUrl: "https://axerpazurefunctiontest.azurewebsites.net/",
     msalConfig: {
         auth: {
-            clientId: 'clientId',
-            authority: 'authority',
+            clientId: 'CLIENT_ID',
+            authority: 'https://login.microsoftonline.com/DIRECTORY_ID',
         },
     },
     apiConfig: {
-        scopes: ['ENTER_SCOPE'],
-        uri: 'ENTER_URI',
+        scopes: [],
+        uri: 'https://axerpazurefunctiontest.azurewebsites.net/',
     },
 };

@@ -36,10 +36,10 @@ export function MSALInstanceFactory(): IPublicClientApplication {
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
   const protectedResourceMap = new Map<string, Array<string>>();
-  // protectedResourceMap.set(
-  //   environment.apiConfig.uri,
-  //   environment.apiConfig.scopes
-  // );
+  protectedResourceMap.set(
+    environment.apiConfig.uri,
+    environment.apiConfig.scopes
+  );
 
   return {
     interactionType: InteractionType.Redirect,
@@ -51,9 +51,9 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
   return {
     interactionType: InteractionType.Redirect,
     authRequest: {
-      scopes: [], // ...environment.apiConfig.scopes
+      scopes: environment.apiConfig.scopes,
     },
-    loginFailedRoute: '/login-failed',
+    loginFailedRoute: '/home',
   };
 }
 
