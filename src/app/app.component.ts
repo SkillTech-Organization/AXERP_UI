@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -121,6 +121,8 @@ export class AppComponent implements OnInit, OnDestroy {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
       this.tokenService.user = new LoginUser(accounts[0].username)
+    } else if (activeAccount) {
+      this.tokenService.user = new LoginUser(activeAccount!.username) 
     }
   }
 

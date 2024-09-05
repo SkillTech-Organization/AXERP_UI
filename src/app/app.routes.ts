@@ -37,6 +37,10 @@ export const routes: Routes = [
         ],
         canActivate: [MsalGuard],
     },
+    {
+        path: 'code',
+        component: DashboardComponent
+    },
     { path: 'home', component: DashboardComponent },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     { path: '**', component: PageNotFoundComponent },
