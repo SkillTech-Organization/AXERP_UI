@@ -6,7 +6,7 @@
     <h1 class="example-app-name">{{name + ' - v' + version}}</h1>
 
     @if (!loginDisplay) {
-      <button class="btn-header" mat-raised-button (click)="loginRedirect()">Login</button>
+      <button class="btn-header" mat-raised-button (click)="login()">Login</button>
     }
     @if (loginDisplay) {
       <button class="btn-header" mat-raised-button (click)="logout()">Logout</button>

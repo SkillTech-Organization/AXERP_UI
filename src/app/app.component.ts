@@ -10,11 +10,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { version, name } from '../../package.json'
 
 import {
-  IPublicClientApplication,
-  PublicClientApplication,
-  BrowserCacheLocation,
-  LogLevel,
-  InteractionType,
   AuthenticationResult,
   PopupRequest,
   RedirectRequest,
@@ -23,20 +18,15 @@ import {
   EventType,
 } from '@azure/msal-browser';
 import {
-  MSAL_INSTANCE,
-  MSAL_INTERCEPTOR_CONFIG,
-  MsalInterceptorConfiguration,
   MSAL_GUARD_CONFIG,
   MsalGuardConfiguration,
   MsalBroadcastService,
   MsalService,
-  MsalGuard,
-  MsalRedirectComponent,
   MsalModule,
-  MsalInterceptor,
 } from '@azure/msal-angular';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { TokenStorageService } from './modules/services/token-storage.service';
+import { LoginUser } from './util/models/LoginUser';
 
 @Component({
   selector: 'app-root',
@@ -69,7 +59,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
-    changeDetectorRef: ChangeDetectorRef, media: MediaMatcher
+    changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+    private tokenService: TokenStorageService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -129,10 +120,11 @@ export class AppComponent implements OnInit, OnDestroy {
     ) {
       let accounts = this.authService.instance.getAllAccounts();
       this.authService.instance.setActiveAccount(accounts[0]);
+      this.tokenService.user = new LoginUser(accounts[0].username)
     }
   }
 
-  loginRedirect() {
+  login() {
     if (this.msalGuardConfig.authRequest) {
       this.authService.loginRedirect({
         ...this.msalGuardConfig.authRequest,
@@ -142,30 +134,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  loginPopup() {
-    if (this.msalGuardConfig.authRequest) {
-      this.authService
-        .loginPopup({ ...this.msalGuardConfig.authRequest } as PopupRequest)
-        .subscribe((response: AuthenticationResult) => {
-          this.authService.instance.setActiveAccount(response.account);
-        });
-    } else {
-      this.authService
-        .loginPopup()
-        .subscribe((response: AuthenticationResult) => {
-          this.authService.instance.setActiveAccount(response.account);
-        });
-    }
-  }
-
-  logout(popup?: boolean) {
-    if (popup) {
-      this.authService.logoutPopup({
-        mainWindowRedirectUri: '/',
-      });
-    } else {
-      this.authService.logoutRedirect();
-    }
+  logout() {
+    this.tokenService.signOut()
+    this.authService.logoutRedirect()
   }
 
   ngOnDestroy(): void {
