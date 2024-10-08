@@ -14,8 +14,6 @@ export class FileUploadInputComponent {
   @Input() placeholderText: string = "No selected file" // "Please select a file to upload"
   @Input() showFileName: boolean = false
   @Input() disabled: boolean = false
-  // @Input() showUploadButtonAfterSelect: boolean = false
-  // @Input() showInfo: boolean = false
 
   get selectedText(): string | undefined {
     if (this.file) {

@@ -15,7 +15,6 @@ $theme: mat.define-theme();
     Variable overwrite
   */
 
-  // --mdc-filled-button-container-color: #7d00fa;
   .fab-primary {
     --mdc-fab-small-container-color: #7d00fa;
     --mat-icon-color: white;
@@ -211,17 +210,6 @@ body {
   display: block;
   overflow-x: scroll;
 }
-
-// .ag-axerp {
-//   display: inline-table;
-
-//   width: 100%;
-//   height: 100%;
-  
-//   min-height: 700px;
-//   min-width: 500px;
-//   max-height: 100%;
-// }
 
 .paginator-label {
   font-size: 16px; 

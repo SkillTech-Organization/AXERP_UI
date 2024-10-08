@@ -4,12 +4,12 @@ import { PageNotFoundComponent } from './modules/building-blocks/util/page-not-f
 import { EventLogViewComponent } from './modules/pages/diagnostics/log-events-view/log-events-view.component';
 import { GasTransactionsManagerComponent } from './modules/pages/master-data/transactions/gas-transactions-manager/gas-transactions-manager.component';
 import { BlobFilesViewComponent } from './modules/pages/master-data/blob_storage/blob-files-view/blob-files-view.component';
+import { MsalGuard } from '@azure/msal-angular';
 
 export const routes: Routes = [
     {
         path: 'business',
         title: 'Business',
-        // component: AppComponent,
         children: [
             {
                 path: 'transactions/gas-transactions',
@@ -22,6 +22,7 @@ export const routes: Routes = [
                 component: BlobFilesViewComponent,
             },
         ],
+        canActivate: [MsalGuard],
     },
     {
         path: 'diagnostics',
@@ -33,6 +34,11 @@ export const routes: Routes = [
                 component: EventLogViewComponent,
             },
         ],
+        canActivate: [MsalGuard],
+    },
+    {
+        path: 'code',
+        component: DashboardComponent
     },
     { path: 'home', component: DashboardComponent },
     { path: '', redirectTo: '/home', pathMatch: 'full' },
