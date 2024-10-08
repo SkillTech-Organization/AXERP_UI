@@ -90,8 +90,6 @@ export class BlobStorageService extends BaseService {
   }
 
   public async UploadBlobFile(req: UploadBlobFileRequest): Promise<ApiResponse<BaseResponse>> {
-    //const headers = new HttpHeaders().append('Content-Disposition', 'multipart/form-data');
-    
     var formData: FormData = new FormData()
 
     formData.append("file", req.Data.Content)
@@ -100,11 +98,6 @@ export class BlobStorageService extends BaseService {
     } else {
       formData.append("path", `${req.Data.FileName}`)
     }
-
-    // const options = {
-    //   headers: headers,
-    //   formData: formData
-    // }
 
     this.http.post(this.BaseUrl + 'UploadBlobFile', formData)
      const request = this.http.post<ApiResponse<BaseResponse>>(this.BaseUrl + 'UploadBlobFile', formData) // options

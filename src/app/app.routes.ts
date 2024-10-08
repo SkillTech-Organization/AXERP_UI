@@ -10,7 +10,6 @@ export const routes: Routes = [
     {
         path: 'business',
         title: 'Business',
-        // component: AppComponent,
         children: [
             {
                 path: 'transactions/gas-transactions',
