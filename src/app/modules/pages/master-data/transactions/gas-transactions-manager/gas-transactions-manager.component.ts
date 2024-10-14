@@ -116,6 +116,9 @@ export class GasTransactionsManagerComponent extends BaseGridViewComponent<GasTr
         }
       case ColumnTypes.date:
         return (params: any) => {
+          if (params.value === null || params.value === undefined || params.value === "") {
+            return null
+          }
           return moment(params.value).format('DD/M/yyyy hh:mm')
         }
     }
