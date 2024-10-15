@@ -10,7 +10,9 @@ import { BlobUploadFile } from "../../models/BlobUploadFile";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatInput } from "@angular/material/input";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { LoadingSpinnerDialogComponent } from "../../../../../shared/dialogs/loading-spinner-dialog/loading-spinner-dialog.component";
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { HttpEventType, HttpResponse } from "@angular/common/http";
+import { AxerpProgressBarComponent } from "../../../../../shared/axerp-progress-bar/axerp-progress-bar.component";
 
 
 @Component({
@@ -18,8 +20,9 @@ import { LoadingSpinnerDialogComponent } from "../../../../../shared/dialogs/loa
   standalone: true,
   imports: [
     LoadingSpinnerDialogContentComponent, ManagerButtonComponent, FileUploadInputComponent,
-    MatFormField, MatInput, MatLabel, ReactiveFormsModule
-  ],
+    MatFormField, MatInput, MatLabel, ReactiveFormsModule, MatProgressBar,
+    AxerpProgressBarComponent
+],
   templateUrl: './upload-blob-files-dialog.component.html',
   styleUrl: './upload-blob-files-dialog.component.scss'
 })
@@ -28,7 +31,27 @@ export class UploadBlobFilesDialogComponent implements OnInit {
 
   readonly dialog = inject(MatDialog);
 
-  file: File | null = null;
+  files: File[] | null = null
+  
+  fileStatus: { [id: string]: { value: number, error?: string, done?: boolean }} = {}
+  get uploadFinished(): boolean {
+    var res = true
+    Object.keys(this.fileStatus).forEach((key: string) => {
+      if (!this.fileStatus[key].done) {
+        res = false
+      }
+    })
+    return res
+  }
+  get hasErrors(): boolean {
+    var res = false
+    Object.keys(this.fileStatus).forEach((key: string) => {
+      if (this.fileStatus[key].error) {
+        res = true
+      }
+    })
+    return res
+  }
 
   loading: boolean = false
   uploading: boolean = false
@@ -45,36 +68,46 @@ export class UploadBlobFilesDialogComponent implements OnInit {
 
   constructor(private service: BlobStorageService,
     private snackService: ToastService) {
-
   }
 
   async ngOnInit(): Promise<void> {}
 
   onFileSelected(event: any) {
-    const file: File = event;
+    const files: File[] = event;
 
-    if (file) {
-      this.file = file;
+    if (files?.length > 0) {
+      for (let i = 0; i < files.length; i++) {
+        this.fileStatus[files[i].name] = { value: 0 }
+      }
+      this.files = files;
     }
   }
 
   async onUpload() {
     this.uploading = true
     try {
-      var spinnerRef = this.dialog.open(LoadingSpinnerDialogComponent, { data: "Uploading file..." })
-      const response = await this.service.UploadBlobFile(new UploadBlobFileRequest(
-        new BlobUploadFile(this.file!.name, this.form.controls["folderName"].value, this.file!)
-      ))
-      spinnerRef.close()
-      if (response?.Value) {
-        const importResponse = response?.Value
+      for (let i = 0; i < this.files!.length; i++) {
+        const file = this.files![i]
+        var uploadFile = new BlobUploadFile(file!.name, this.form.controls["folderName"].value, file!)
 
-        if (!importResponse.IsSuccess) {
-          this.snackService.openError(importResponse.RequestError ?? "Upload failed! Internal Server Error")
-        } else {
-          this.snackService.openInfo('Upload was successful!')
-          this.dialogRef.close(true);
-        }
+        this.service.UploadBlobFile(new UploadBlobFileRequest(uploadFile))
+          .subscribe({
+            next: (event: any) => {
+              if (event.type === HttpEventType.UploadProgress) {
+                this.fileStatus[file.name].value = Math.round(100 * event.loaded / (event.total ?? event.loaded))
+                if (this.fileStatus[file.name].value >= 100) {
+                  this.fileStatus[file.name].done = true
+                }
+              } else if (event instanceof HttpResponse) {
+                this.fileStatus[file.name].done = true
+              }
+            },
+            error: (err: any) => {
+              this.fileStatus[file.name].value = 0
+              this.fileStatus[file.name].error = err
+              this.fileStatus[file.name].done = true
+            }
+          })
       }
     } catch(error) {
       this.snackService.openError(error)

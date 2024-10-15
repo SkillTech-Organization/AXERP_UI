@@ -1,6 +1,6 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError, map, lastValueFrom } from "rxjs";
+import { catchError, map, lastValueFrom, Observable } from "rxjs";
 import { environment } from "../../../../../../environments/environment.development";
 import { BaseService } from "../../../../../config/base.service";
 import { HelperFunctions } from "../../../../../util/HelperFunctions";
@@ -89,7 +89,7 @@ export class BlobStorageService extends BaseService {
     return await lastValueFrom(request)
   }
 
-  public async UploadBlobFile(req: UploadBlobFileRequest): Promise<ApiResponse<BaseResponse>> {
+  public UploadBlobFile(req: UploadBlobFileRequest): Observable<HttpEvent<any>> {
     var formData: FormData = new FormData()
 
     formData.append("file", req.Data.Content)
@@ -99,12 +99,11 @@ export class BlobStorageService extends BaseService {
       formData.append("path", `${req.Data.FileName}`)
     }
 
-    this.http.post(this.BaseUrl + 'UploadBlobFile', formData)
-     const request = this.http.post<ApiResponse<BaseResponse>>(this.BaseUrl + 'UploadBlobFile', formData) // options
-      .pipe(
-        catchError(this.handleError)
-      )
+    const request = new HttpRequest('POST', this.BaseUrl + 'UploadBlobFile', formData, {
+      reportProgress: true,
+      responseType: 'json'
+     })
 
-    return await lastValueFrom(request)
+    return this.http.post(this.BaseUrl + 'UploadBlobFile', formData, { reportProgress: true, observe: 'events' })
   }
 }

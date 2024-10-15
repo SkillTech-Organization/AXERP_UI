@@ -11,7 +11,7 @@ import { ManagerButtonComponent } from '../buttons/manager-button/manager-button
   styleUrl: './file-upload-input.component.scss'
 })
 export class FileUploadInputComponent {
-  @Input() placeholderText: string = "No selected file" // "Please select a file to upload"
+  @Input() placeholderText: string = "No selected file(s)" // "Please select a file to upload"
   @Input() showFileName: boolean = false
   @Input() disabled: boolean = false
 
@@ -20,21 +20,24 @@ export class FileUploadInputComponent {
       if (this.showFileName) {
         return this.file?.name
       } else {
-        return "File selected"
+        return "File(s) selected"
       }
     }
     return undefined
   }
 
-  @Output() fileSelected: EventEmitter<File> = new EventEmitter<File>()
+  @Output() fileSelected: EventEmitter<File[]> = new EventEmitter<File[]>()
   file: File | null = null
+  files: File[] | null = null
 
   onChange(event: any) {
     const file: File = event.target.files[0];
+    const files: File[] = event.target.files;
 
     if (file) {
       this.file = file;
-      this.fileSelected.emit(this.file)
+      this.files = files;
+      this.fileSelected.emit(this.files)
     }
   }
 }
