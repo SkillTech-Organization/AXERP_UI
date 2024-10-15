@@ -1,40 +1,50 @@
 <div class="wrapper">
-    <h6>Upload File</h6>
+    @if(files && files.length > 0 && uploadFinished) {
+        @if(hasErrors) {
+            <h6>Upload finished with errors!</h6>
+        } @else {
+            <h6>Upload finished!</h6>
+        }
+    } @else {
+        <h6>Upload File(s)</h6>
+    }
 
     <hr/>
 
     <div class="input-row">
-        <!--TODO: kell-e folder input?-->
-        <!-- <form class="file-upload-form" [formGroup]="form">
-            <mat-form-field appearance="outline" class="small-form-field">
-                <mat-label>Blob storage folder</mat-label>
-                <input matInput formControlName="folderName" placeholder="Ex. import, stored...">
-            </mat-form-field>
-        </form> -->
-
         <app-file-upload-input (fileSelected)="onFileSelected($event)"></app-file-upload-input>
     </div>
 
     <hr/>
     
     <section class="file-info">
-        File details:
-        <ul>
-            <li>Name: {{file?.name ?? "No Data"}}</li>
-            <li>Type: {{file?.type ?? "No Data"}}</li>
-            <li>Size: {{file?.size ?? "No Data"}} bytes</li>
-        </ul>
+        File(s):
+        @if(!files || files.length === 0) {
+            <span>No files selected</span>
+        } @else {
+                @for(file of files; track file) {
+                    <div class="file-status">
+                        <span>
+                            {{file?.name ?? "No Data"}} <br> Type: {{file?.type ?? "No Data"}} | Size: {{file?.size ?? "No Data"}} bytes
+                        </span>
+                        @if (fileStatus[file?.name ?? ''].error) {
+                            <span class="file-error">Upload error: {{fileStatus[file?.name ?? ''].error}}</span>
+                        }
+                        <app-axerp-progress-bar [value]="fileStatus[file?.name ?? ''].value" class="full-width"></app-axerp-progress-bar>
+                    </div>
+                }
+        }
     </section>
 
     <hr/>
 
     <app-manager-button icon="upload" (btnClick)="onUpload()"
-        [disabled]="DisableDialogButtons || !file">
+        [disabled]="DisableDialogButtons || !files || files.length === 0">
         Submit
     </app-manager-button>
 
     <app-manager-button icon="close" (btnClick)="cancel()"
         [disabled]="DisableDialogButtons">
-        Cancel
+        Close
     </app-manager-button>
 </div>
