@@ -99,7 +99,13 @@ export class UploadBlobFilesDialogComponent implements OnInit {
                   this.fileStatus[file.name].done = true
                 }
               } else if (event instanceof HttpResponse) {
-                this.fileStatus[file.name].done = true
+                if (event.body?.Value?.RequestError) {
+                  this.fileStatus[file.name].value = 0
+                  this.fileStatus[file.name].error = event.body?.Value?.RequestError
+                  this.fileStatus[file.name].done = true
+                } else {
+                  this.fileStatus[file.name].done = true
+                }
               }
             },
             error: (err: any) => {
