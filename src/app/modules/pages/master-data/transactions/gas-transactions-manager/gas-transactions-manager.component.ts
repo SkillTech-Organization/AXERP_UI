@@ -42,7 +42,10 @@ import moment from 'moment';
     MatProgressSpinner,
     AgGridAngular, ManagerButtonComponent
   ],
-  providers: [MockService]
+  providers: [MockService],
+  host: {
+    class: 'axerp-data-view-page'
+  }
 })
 export class GasTransactionsManagerComponent extends BaseGridViewComponent<GasTransaction> implements AfterViewInit {
   override gridDiv = document.querySelector<HTMLElement>("#transactionsGrid")!;

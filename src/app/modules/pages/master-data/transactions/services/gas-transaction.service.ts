@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, map, lastValueFrom } from "rxjs";
-import { environment } from "../../../../../../environments/environment.development";
+import { environment } from "../../../../../../environments/environment";
 import { BaseService } from "../../../../../config/base.service";
 import { HelperFunctions } from "../../../../../util/HelperFunctions";
 import { ApiResponse } from "../../../../../util/models/ApiResponse";

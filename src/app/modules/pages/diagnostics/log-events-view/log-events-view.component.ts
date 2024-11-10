@@ -41,7 +41,10 @@ import { ColumnData } from "../../../../util/models/ColumnData";
     AgGridAngular, ManagerButtonComponent,
     MatInput, MatFormField, MatLabel
   ],
-  providers: [MockService]
+  providers: [MockService],
+  host: {
+    class: 'axerp-data-view-page'
+  }
 })
 export class EventLogViewComponent extends BaseGridViewComponent<ILogEvent> implements AfterViewInit {
   override gridDiv = document.querySelector<HTMLElement>("#appInsightsGrid")!;
