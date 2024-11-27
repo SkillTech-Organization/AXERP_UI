@@ -83,7 +83,9 @@ export class BaseGridViewComponent<T> {
         minWidth: element.MinWidth,
         maxWidth: element.MaxWidth,
 
-        width: (element.MinWidth && element.MaxWidth) ? undefined : 1000
+        width: (element.MinWidth && element.MaxWidth) ? undefined : 1000,
+
+        wrapText: false
       } as ColDef)
     })
   }

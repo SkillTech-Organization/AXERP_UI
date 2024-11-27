@@ -62,6 +62,8 @@
                 [rowMultiSelectWithClick]="true"
                 [suppressRowClickSelection]="false"
                 (rowSelected)="onRowSelected($event)"
+
+                [enableCellTextSelection]="true"
                 
                 (paginationChanged)="onPaginationChanged($event)"
                 (gridReady)="onGridReady($event)" />
