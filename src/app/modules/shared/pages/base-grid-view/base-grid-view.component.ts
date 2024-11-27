@@ -31,7 +31,7 @@ export class BaseGridViewComponent<T> {
 
   gridModel: GridModel = new GridModel([])
   selection: SelectionModel<T>
-  domLayout: DomLayoutType = "autoHeight";
+  domLayout: DomLayoutType = "normal";
 
   data: T[] = []
   colDefs: ColDef[] = []

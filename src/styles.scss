@@ -222,3 +222,46 @@ body {
 .full-width {
   min-width: 100%;
 }
+
+/*
+  Layout
+*/
+
+/* Page for viewing data with grid, eg. Gas Transactions */
+.axerp-data-view-page {
+  display: block;
+
+  overflow: hidden;
+
+  height: 100%; // calc(100vh - 120px);
+
+  /* Material Card with page title, function buttons, grid... */
+  .axerp-view-card {
+  
+    height: 80%;
+  
+    /* General wrapping div */
+    .axerp-grid-wrapper {
+      display: flex;
+      
+      flex-direction: column;
+  
+      width: 100%;
+      height: 100%;
+    
+      /* Wrapping grid directly around ag-grid */
+      .axerp-inner-wrapper {
+        flex: 1 1 auto;
+  
+        width: 100%;
+        height: 100%;
+    
+        /* Ag-grid */
+        .axerp-ag-grid {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

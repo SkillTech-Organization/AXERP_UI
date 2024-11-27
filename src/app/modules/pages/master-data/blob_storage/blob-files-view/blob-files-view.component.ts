@@ -41,7 +41,10 @@ import { HelperFunctions } from '../../../../../util/HelperFunctions';
     MatProgressSpinner,
     AgGridAngular, ManagerButtonComponent
   ],
-  providers: [MockService]
+  providers: [MockService],
+  host: {
+    class: 'axerp-data-view-page'
+  }
 })
 export class BlobFilesViewComponent extends BaseGridViewComponent<BlobFile> implements AfterViewInit {
   override gridDiv = document.querySelector<HTMLElement>("#transactionsGrid")!;

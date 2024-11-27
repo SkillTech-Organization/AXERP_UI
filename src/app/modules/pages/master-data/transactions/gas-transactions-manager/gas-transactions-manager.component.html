@@ -1,4 +1,4 @@
-<div class="mat-elevation-z8 m25">
+<div class="mat-elevation-z8 m25 axerp-view-card">
     <mat-toolbar class="secondary manager-toolbar">
         <h1 class="mr10">Gas Transactions</h1>
 
@@ -24,29 +24,32 @@
     
     <mat-divider></mat-divider>
 
-    <!-- class ag-axerp -->
-    <ag-grid-angular
-        #transactionsGrid
-
-        [loading]="loading"
-
-        class="ag-theme-quartz" 
-
-        [rowData]="data"
-        [columnDefs]="colDefs"
-
-        [domLayout]="domLayout"
-
-        [pagination]="true"
-        [paginationPageSize]="_activePageSize"
-        [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
-        [paginationAutoPageSize]="false"
+     <div class="axerp-grid-wrapper">
+        <div class="axerp-inner-wrapper">
+            <ag-grid-angular
+                #transactionsGrid
         
-        [rowSelection]="'multiple'"
-        [rowMultiSelectWithClick]="true"
-        [suppressRowClickSelection]="false"
-        (rowSelected)="onRowSelected($event)"
+                [loading]="loading"
         
-        (paginationChanged)="onPaginationChanged($event)"
-        (gridReady)="onGridReady($event)" />
+                class="ag-theme-quartz axerp-ag-grid" 
+        
+                [rowData]="data"
+                [columnDefs]="colDefs"
+        
+                [domLayout]="domLayout"
+        
+                [pagination]="true"
+                [paginationPageSize]="_activePageSize"
+                [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
+                [paginationAutoPageSize]="false"
+                
+                [rowSelection]="'multiple'"
+                [rowMultiSelectWithClick]="true"
+                [suppressRowClickSelection]="false"
+                (rowSelected)="onRowSelected($event)"
+                
+                (paginationChanged)="onPaginationChanged($event)"
+                (gridReady)="onGridReady($event)" />
+        </div>
+     </div>
 </div>

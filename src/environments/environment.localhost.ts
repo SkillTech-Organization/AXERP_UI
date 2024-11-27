@@ -1,5 +1,5 @@
-export const environment = { 
-    apiUrl: "https://axerpazurefunctiontest.azurewebsites.net/",
+export const environment = {
+    apiUrl: "http://localhost:7071/",
     msalConfig: {
         auth: {
             clientId: '',
@@ -9,6 +9,6 @@ export const environment = {
     apiConfig: {
         redirect: "",
         scopes: [''],
-        uri: "https://axerpazurefunctiontest.azurewebsites.net/"
+        uri: ""
     },
 };
