@@ -1,0 +1,21 @@
+.progressbar {
+    max-height: 20px;
+
+    .progressbar-value {
+        position: relative;
+
+        left: 45%;
+        bottom: 20px;
+    }
+
+    .progressbar-bg {
+        background-color: #E8ECEF;
+        min-width: 100%;
+        min-height: 100%;
+    }
+
+    .progressbar-progress {
+        background-color: #007AFF;
+        min-height: 20px;
+    }
+}

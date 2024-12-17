@@ -1,11 +1,29 @@
 @use '@angular/material' as mat;
 
+/* Core Data Grid CSS */
+@import 'ag-grid-community/styles/ag-grid.css';
+/* Quartz Theme Specific CSS */
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
 $theme: mat.define-theme();
 
 @include mat.core();
 @include mat.color-variants-backwards-compatibility($theme);
 
 @mixin theme($theme) {
+  /*
+    Variable overwrite
+  */
+
+  .fab-primary {
+    --mdc-fab-small-container-color: #7d00fa;
+    --mat-icon-color: white;
+  }
+  .fab-danger {
+    --mdc-fab-small-container-color: #fa0000;
+    --mat-icon-color: white;
+  }
+
   /*
     Beépített komponensek
   */
@@ -38,6 +56,103 @@ $theme: mat.define-theme();
   tr.selected-row {
     background: mat.get-theme-color($theme, primary-container);
   }
+  
+  /*
+    Snackbars
+  */
+  .snackbar-info {
+    --mdc-snackbar-container-color: green;
+    --mdc-snackbar-supporting-text-color: white;
+    --mat-snack-bar-button-color: rgb(211, 208, 255);
+  }
+
+  .snackbar-warning {
+    --mdc-snackbar-container-color: rgba(255, 255, 0, 0.637);
+    --mdc-snackbar-supporting-text-color: black;
+    --mat-snack-bar-button-color: black;
+  }
+
+  .snackbar-error {
+    --mdc-snackbar-container-color: red;
+    --mdc-snackbar-supporting-text-color: white;
+    --mat-snack-bar-button-color: rgb(211, 208, 255);
+  }
+
+  .small-form-field {
+    max-height: 60px;
+    max-width: 200px;
+  }
+
+  /*
+    Responsivity
+  */
+
+  /*
+    MIN WIDTH 1412 PX
+  */
+  @media (min-width: 1412px) {
+    .function-minifab-btn {
+      display: none;
+    }
+
+    .filter-form-field {
+      min-width: 500px !important;
+
+      max-height: 56px;
+      
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      
+      align-items: center;
+    }
+  }
+
+  /*
+    MAX WIDTH 1412 PX
+  */
+  @media (max-width: 1412px) {
+    .function-minifab-btn {
+      display: default;
+    }
+
+    .function-normal-btn {
+      display: none;
+    }
+    .function-btn-text {
+      display: none;
+    }
+
+    .filter-form-field::placeholder {
+      display: none;
+    }
+
+    .filter-form-field {
+      min-width: 250px !important;
+
+      max-height: 56px;
+      
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      
+      align-items: center;
+
+      .filter-form-desc {
+        display: none;
+      }
+    }
+  }
+
+  /*
+    MAX WIDTH 600 PX
+  */
+  @media (max-width: 600px) {
+    .manager-toolbar {
+      flex-direction: column;
+      min-height: 200px;
+      padding-top: 25px;
+      row-gap: 10px;
+    }
+  }
 }
 
 :root {
@@ -53,7 +168,6 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   margin: 0;
   padding: 30px;
-  height: 100%;
 }
 
 /*
@@ -66,4 +180,88 @@ body {
 
 .mr10 {
   margin-right: 10px !important;
+}
+
+/*
+  Misc
+*/
+
+.manager-toolbar {
+  min-height: 100px;
+}
+
+.center-spinner {
+  margin: auto;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    column-gap: 15px;
+    align-content: center;
+}
+
+/*
+  Tables
+*/
+
+.scroll-table {
+  display: block;
+  overflow-x: scroll;
+}
+
+.paginator-label {
+  font-size: 16px; 
+}
+
+/*
+  Custom
+*/
+
+.full-width {
+  min-width: 100%;
+}
+
+/*
+  Layout
+*/
+
+/* Page for viewing data with grid, eg. Gas Transactions */
+.axerp-data-view-page {
+  display: block;
+
+  overflow: hidden;
+
+  height: 100%; // calc(100vh - 120px);
+
+  /* Material Card with page title, function buttons, grid... */
+  .axerp-view-card {
+  
+    height: 80%;
+  
+    /* General wrapping div */
+    .axerp-grid-wrapper {
+      display: flex;
+      
+      flex-direction: column;
+  
+      width: 100%;
+      height: 100%;
+    
+      /* Wrapping grid directly around ag-grid */
+      .axerp-inner-wrapper {
+        flex: 1 1 auto;
+  
+        width: 100%;
+        height: 100%;
+    
+        /* Ag-grid */
+        .axerp-ag-grid {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
 }

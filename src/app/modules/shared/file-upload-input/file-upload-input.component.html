@@ -1,0 +1,9 @@
+<input type="file" class="file-input" [multiple]="true" (change)="onChange($event)" #fileUpload />
+
+<div class="file-upload">
+    {{selectedText || placeholderText}}
+
+    <app-manager-button [mini]="true" icon="attach_file" (btnClick)="fileUpload.click()"
+        [disabled]="disabled">
+    </app-manager-button>
+</div>

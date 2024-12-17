@@ -1,0 +1,22 @@
+.wrapper {
+    margin: 15px;
+}
+
+.file-status {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: flex-start;
+    row-gap: 5px;
+    margin-top: 15px;
+}
+
+.file-info {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.file-error {
+    color: red;
+}

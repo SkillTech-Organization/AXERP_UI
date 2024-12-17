@@ -1,0 +1,72 @@
+<div class="mat-elevation-z8 m25 axerp-view-card">
+    <mat-toolbar class="secondary manager-toolbar">
+        <h1 class="mr10">Logs</h1>
+
+        <app-manager-button [mini]="true" icon="refresh" (btnClick)="RefreshData()"
+            [disabled]="DisableManagerButtons">
+        </app-manager-button>
+
+        <app-manager-button [mini]="true" icon="first_page" (btnClick)="paginator.pageFirst()"
+            [disabled]="DisableManagerButtons || paginator.IsFirstPage">
+        </app-manager-button>
+
+        <app-manager-button icon="keyboard_double_arrow_left" (btnClick)="paginator.pageBack()"
+            [disabled]="DisableManagerButtons || !paginator.CanPageBack">
+            Previous 100
+        </app-manager-button>
+
+        <app-manager-button icon="keyboard_arrow_left" (btnClick)="paginator.pageBack(10)"
+            [disabled]="DisableManagerButtons || !paginator.CanPageBack">
+            Previous 10
+        </app-manager-button>
+
+        <app-manager-button icon="keyboard_arrow_right" (btnClick)="paginator.pageNext(10)"
+            [disabled]="DisableManagerButtons || !paginator.HasMorePages">
+            Next 10
+        </app-manager-button>
+
+        <app-manager-button icon="keyboard_double_arrow_right" (btnClick)="paginator.pageNext()"
+            [disabled]="DisableManagerButtons || !paginator.HasMorePages">
+            Next 100
+        </app-manager-button>
+
+        <app-manager-button [mini]="true" icon="last_page" (btnClick)="paginator.pageLast()"
+            [disabled]="DisableManagerButtons || paginator.IsLastPage">
+        </app-manager-button>
+
+        <mat-label class="paginator-label">{{paginator.Label}}</mat-label>
+    </mat-toolbar>
+    
+    <mat-divider></mat-divider>
+
+     <div class="axerp-grid-wrapper">
+        <div class="axerp-inner-wrapper">
+            <ag-grid-angular
+                #appInsightsGrid
+        
+                [loading]="loading"
+        
+                class="ag-theme-quartz axerp-ag-grid" 
+        
+                [rowData]="data"
+                [columnDefs]="colDefs"
+        
+                [domLayout]="domLayout"
+        
+                [pagination]="true"
+                [paginationPageSize]="_activePageSize"
+                [paginationPageSizeSelector]="[5, 10, 15, 20, 25, 50, 100]"
+                [paginationAutoPageSize]="false"
+                
+                [rowSelection]="'multiple'"
+                [rowMultiSelectWithClick]="true"
+                [suppressRowClickSelection]="false"
+                (rowSelected)="onRowSelected($event)"
+
+                [enableCellTextSelection]="true"
+                
+                (paginationChanged)="onPaginationChanged($event)"
+                (gridReady)="onGridReady($event)" />
+        </div>
+     </div>
+</div>
