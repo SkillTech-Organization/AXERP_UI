@@ -62,6 +62,8 @@ export class GasTransactionService extends BaseService {
                   element.DeliveryIDSffx,
                   element.DateLoadedEnd,
                   element.DateDelivered,
+                  element.PurchaseContract,
+                  element.QtyDeliveredInKg,
                   element.SalesContractID,
                   element.SalesStatus,
                   element.Terminal,
