@@ -5,7 +5,7 @@ export interface IGasTransaction {
     DeliveryIDSffx: string
     DateLoadedEnd?: Date
     DateDelivered?: Date
-    PurchaseContract: number | null
+    PurchaseContract: string | null
     QtyDeliveredInKg: number | null
     SalesContractID: string | null
     SalesStatus: string | null
@@ -53,7 +53,7 @@ export class GasTransaction implements IGasTransaction {
         public DeliveryIDSffx: string,
         private _DateLoadedEnd: any,
         private _DateDelivered: any,
-        public PurchaseContract: number | null,
+        public PurchaseContract: string | null,
         public QtyDeliveredInKg: number | null,
         public SalesContractID: string | null,
         public SalesStatus: string | null,
