@@ -1,8 +1,8 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
   <mat-toolbar color="primary" class="primary example-toolbar">
     @if(loginDisplay) {
-      <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
     }
+    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
     <h1 class="example-app-name">{{name + ' - v' + version}}</h1>
 
     @if (!loginDisplay) {
@@ -18,11 +18,11 @@
       fixedTopGap="56">
       <mat-nav-list>
         @if(loginDisplay) {
-          <a mat-list-item routerLink="home"><mat-icon>home</mat-icon>Home</a>
-          <a mat-list-item routerLink="business/transactions/gas-transactions"><mat-icon>water</mat-icon>Gas Transactions</a>
-          <a mat-list-item routerLink="business/blob/blob-files"><mat-icon>description</mat-icon>Blob Files</a>
-          <a mat-list-item routerLink="diagnostics/monitoring/logs"><mat-icon>menu_open</mat-icon>Logs</a>
         }
+        <a mat-list-item routerLink="home"><mat-icon>home</mat-icon>Home</a>
+        <a mat-list-item routerLink="business/transactions/gas-transactions"><mat-icon>water</mat-icon>Gas Transactions</a>
+        <a mat-list-item routerLink="business/blob/blob-files"><mat-icon>description</mat-icon>Blob Files</a>
+        <a mat-list-item routerLink="diagnostics/monitoring/logs"><mat-icon>menu_open</mat-icon>Logs</a>
       </mat-nav-list>
     </mat-sidenav>
 

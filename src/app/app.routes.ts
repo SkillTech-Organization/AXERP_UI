@@ -22,7 +22,7 @@ export const routes: Routes = [
                 component: BlobFilesViewComponent,
             },
         ],
-        canActivate: [MsalGuard],
+        //canActivate: [MsalGuard],
     },
     {
         path: 'diagnostics',
@@ -34,7 +34,7 @@ export const routes: Routes = [
                 component: EventLogViewComponent,
             },
         ],
-        canActivate: [MsalGuard],
+        //canActivate: [MsalGuard],
     },
     {
         path: 'code',
