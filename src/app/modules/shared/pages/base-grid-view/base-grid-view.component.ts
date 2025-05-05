@@ -80,10 +80,8 @@ export class BaseGridViewComponent<T> {
 
         valueFormatter: this.GetValueFormatter(element),
 
-        minWidth: element.MinWidth,
-        maxWidth: element.MaxWidth,
-
-        width: (element.MinWidth && element.MaxWidth) ? undefined : 1000,
+        minWidth: 50,
+        width: 300,
 
         wrapText: false
       } as ColDef)

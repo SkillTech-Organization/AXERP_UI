@@ -73,9 +73,6 @@ export class GridModel {
                 type,
                 `${d.Title} sort`,
                 type == ColumnTypes.date || type == ColumnTypes.number ? TextAligns.center : TextAligns.left,
-                d.Order,
-                d.MinWidth,
-                d.MaxWidth
             );
             cols.push(col)
         }
@@ -92,9 +89,6 @@ export class ColumnModel {
         public ColumnType: ColumnTypes = ColumnTypes.undefined,
         public SortTooltip: string = "",
         public TextAlign: TextAligns = TextAligns.left,
-        public Order?: number,
-        public MinWidth?: number,
-        public MaxWidth?: number
     ) {
 
     }
