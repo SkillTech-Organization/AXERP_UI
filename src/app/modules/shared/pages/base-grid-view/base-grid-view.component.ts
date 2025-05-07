@@ -81,7 +81,7 @@ export class BaseGridViewComponent<T> {
         valueFormatter: this.GetValueFormatter(element),
 
         minWidth: 50,
-        width: 300,
+        width: 150,
 
         wrapText: false
       } as ColDef)
