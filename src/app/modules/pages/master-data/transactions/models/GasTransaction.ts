@@ -76,7 +76,7 @@ export class GasTransaction implements IGasTransaction {
         public Sales: number | null,
         private _CMR: any,
         public BioMWh: number | null,
-        private _BillOfLading: any,
+        billOfLading: any,
         public BioAddendum: string | null,
         public Comment: string | null,
         public CustomerNote: string | null,
@@ -98,6 +98,12 @@ export class GasTransaction implements IGasTransaction {
         
         this.CMR = moment(_CMR).isValid() ? moment(_CMR).toDate() : undefined
         
-        this.BillOfLading = moment(_BillOfLading).isValid() ? moment(_BillOfLading).toDate() : undefined
+        const value = moment(billOfLading)
+        if (value.isValid())
+        {
+            this.BillOfLading = value.get('year') >= 2025 && value.get('month') >= 4
+                ? moment.utc(billOfLading).toDate() 
+                : value.toDate()
+        }
     }
 }
