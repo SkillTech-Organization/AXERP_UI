@@ -148,7 +148,7 @@ export class EventLogViewComponent extends BaseGridViewComponent<ILogEvent> impl
         }
       case ColumnTypes.date:
         return (params: any) => {
-          return moment(params.value).format('DD/M/yyyy hh:mm')
+          return moment(params.value).format('DD/M/yyyy HH:mm')
         }
     }
     return undefined
