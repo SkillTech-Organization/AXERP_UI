@@ -20,11 +20,11 @@ export class LogEvent implements ILogEvent {
         public System?: string,
         public Function?: string,
         public Who?: string,
-        private DateStamp?: any,
+        dateStamp?: any,
         public Description?: string,
         public Result?: string,
     ) {
         moment.locale('en-EN')
-        this.When = moment(DateStamp).isValid() ? moment(DateStamp).toDate() : null
+        this.When = moment(dateStamp).isValid() ? moment.utc(dateStamp).toDate() : null
     }
 }
