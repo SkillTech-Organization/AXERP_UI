@@ -1,14 +1,14 @@
-export const environment = { 
-    apiUrl: "https://axerpazurefunctiontest.azurewebsites.net/",
+export const environment = {
+    apiUrl: "",
     msalConfig: {
         auth: {
-            clientId: '',
-            authority: '',
+            clientId: "",
+            authority: "",
         },
     },
     apiConfig: {
         redirect: "",
         scopes: [''],
-        uri: "https://axerpazurefunctiontest.azurewebsites.net/"
+        uri: ""
     },
 };
