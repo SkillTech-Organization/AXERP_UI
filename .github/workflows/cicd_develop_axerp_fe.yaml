@@ -55,14 +55,8 @@ jobs:
           version: ${{ env.PACKAGE_VERSION }} - ${{ env.SHA_SHORT_COMMIT_NUMBER }}
       - run: echo "${{ env.PACKAGE_VERSION }} - ${{ env.SHA_SHORT_COMMIT_NUMBER }}"
 
-      - name: files
-        run: |
-          echo "Files in the repository:"
-          ls -la
-          echo "Current directory: $(pwd)"
-
       - name: Inject secrets into environment.ts
-        run: node update-env.js
+        run: node update-environment.js
         env:
           API_URL: ${{ env.API_URL }}
           CLIENT_ID: ${{ secrets.AXERP_TEST_AUTH_CLIENT_ID }}
