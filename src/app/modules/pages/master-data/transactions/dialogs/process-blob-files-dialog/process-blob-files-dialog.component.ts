@@ -36,7 +36,7 @@ export class ProcessBlobFilesDialogComponent implements OnInit {
         this.snackService.openError(importResponse.RequestError ?? "Internal Server Error")
       } else {
         if (importResponse.Errors.length == 0 && importResponse.Warnings.length == 0 && importResponse.Processed.length == 0) {
-          this.snackService.openInfo("There are no blob files to process.");
+          this.snackService.openInfo("No new file to process!");
         }
         else if (importResponse.Errors.length == 0 && importResponse.Warnings.length > 0 && importResponse.Processed.length == 0) {
           this.snackService.openInfo("There were no processable blob files.");
