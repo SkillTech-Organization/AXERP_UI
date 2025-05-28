@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync } from 'fs';
+const fs = require('fs');
 
-let content = readFileSync('src/environments/environment.ts', 'utf8');
+let content = fs.readFileSync('src/environments/environment.ts', 'utf8');
 
 // Environment variables from process.env
 const {
@@ -24,5 +24,5 @@ content = content
   .replace(/uri:\s*["'`].*?["'`]/, `uri: "${URI}"`)
   .replace(/scopes:\s*\[[^\]]*\]/, scopesString);
 
-writeFileSync('src/environments/environment.ts', content);
+fs.writeFileSync('src/environments/environment.ts', content);
 console.log('environment.ts updated successfully');
