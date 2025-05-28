@@ -81,12 +81,12 @@ jobs:
       #      CI: true
         # npm run test :headless
         
-      # - name: Archive build
-      #   if: success()
-      #   uses: actions/upload-artifact@v1
-      #   with:
-      #     name: deploy_dist
-      #     path: dist
+      - name: Archive build
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy_dist_${{ github.sha }}
+          path: dist
 
 #   deploy:
 # #    if: ${{ github.event.pull_request.merged }}
