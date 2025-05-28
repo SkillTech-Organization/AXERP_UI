@@ -58,11 +58,11 @@ jobs:
       - name: Inject secrets into environment.ts
         run: node update-env.js
         env:
-          API_URL: ${{ secrets.API_URL }}
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          AUTHORITY: ${{ secrets.AUTHORITY }}
-          REDIRECT: ${{ secrets.REDIRECT }}
-          URI: ${{ secrets.URI }}
+          API_URL: ${{ env.API_URL }}
+          CLIENT_ID: ${{ secrets.AXERP_TEST_AUTH_CLIENT_ID }}
+          AUTHORITY: ${{ secrets.AXERP_TEST_AUTH_AUTHORITY }}
+          REDIRECT: ${{ env.AXERP_TEST_API_CONFIG_REDIRECT }}
+          URI: ${{ env.API_URL }}
 
      # - name: Early exit
      #   run: |
@@ -81,12 +81,12 @@ jobs:
       #      CI: true
         # npm run test :headless
         
-      - name: Archive build
-        if: success()
-        uses: actions/upload-artifact@v1
-        with:
-          name: deploy_dist
-          path: dist
+      # - name: Archive build
+      #   if: success()
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: deploy_dist
+      #     path: dist
 
 #   deploy:
 # #    if: ${{ github.event.pull_request.merged }}
