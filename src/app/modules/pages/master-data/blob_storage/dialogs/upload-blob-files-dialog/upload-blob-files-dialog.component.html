@@ -22,29 +22,29 @@
         @if(!files || files.length === 0) {
             <span>No files selected</span>
         } @else {
-                @for(file of files; track file) {
-                    <div class="file-status">
-                        <span>
-                            {{file?.name ?? "No Data"}} <br> Type: {{file?.type ?? "No Data"}} | Size: {{file?.size ?? "No Data"}} bytes
-                        </span>
-                        @if (fileStatus[file?.name ?? ''].error) {
-                            <span class="file-error">Upload error: {{fileStatus[file?.name ?? ''].error}}</span>
-                        }
-                        <app-axerp-progress-bar [value]="fileStatus[file?.name ?? ''].value" class="full-width"></app-axerp-progress-bar>
-                    </div>
-                }
+            @for(file of files; track file) {
+                <div class="file-status">
+                    <span>
+                        {{file?.name ?? "No Data"}} <br> Type: {{file?.type ?? "No Data"}} | Size: {{file?.size ?? "No Data"}} bytes
+                    </span>
+                    @if (fileStatus[file?.name ?? ''].error) {
+                        <span class="file-error">Upload error: {{fileStatus[file?.name ?? ''].error}}</span>
+                    }
+                    <app-axerp-progress-bar [value]="fileStatus[file?.name ?? ''].value" class="full-width"></app-axerp-progress-bar>
+                </div>
+            }
         }
     </section>
 
     <hr/>
 
     <app-manager-button icon="upload" (btnClick)="onUpload()"
-        [disabled]="DisableDialogButtons || !files || files.length === 0">
+        [disabled]="!canUpload || !files || files.length === 0">
         Submit
     </app-manager-button>
 
     <app-manager-button icon="close" (btnClick)="cancel()"
-        [disabled]="DisableDialogButtons">
+        [disabled]="!canClose">
         Close
     </app-manager-button>
 </div>

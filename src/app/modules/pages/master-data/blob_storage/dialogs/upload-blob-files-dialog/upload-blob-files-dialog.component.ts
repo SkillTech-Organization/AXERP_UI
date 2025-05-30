@@ -1,16 +1,12 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { ToastService } from "../../../../../services/toast.service";
-import { LoadingSpinnerDialogContentComponent } from "../../../../../shared/loading-spinner-dialog-content/loading-spinner-dialog-content";
 import { BlobStorageService } from "../../services/blob-storage.service";
 import { ManagerButtonComponent } from "../../../../../shared/buttons/manager-button/manager-button.component";
 import { FileUploadInputComponent } from "../../../../../shared/file-upload-input/file-upload-input.component";
 import { UploadBlobFileRequest } from "../../models/UploadBlobFileRequest";
 import { BlobUploadFile } from "../../models/BlobUploadFile";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
-import { MatInput } from "@angular/material/input";
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MatProgressBar } from '@angular/material/progress-bar';
+import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { AxerpProgressBarComponent } from "../../../../../shared/axerp-progress-bar/axerp-progress-bar.component";
 
@@ -19,14 +15,12 @@ import { AxerpProgressBarComponent } from "../../../../../shared/axerp-progress-
   selector: 'app-upload-blob-files-dialog',
   standalone: true,
   imports: [
-    LoadingSpinnerDialogContentComponent, ManagerButtonComponent, FileUploadInputComponent,
-    MatFormField, MatInput, MatLabel, ReactiveFormsModule, MatProgressBar,
-    AxerpProgressBarComponent
+    ManagerButtonComponent, FileUploadInputComponent, ReactiveFormsModule, AxerpProgressBarComponent
 ],
   templateUrl: './upload-blob-files-dialog.component.html',
   styleUrl: './upload-blob-files-dialog.component.scss'
 })
-export class UploadBlobFilesDialogComponent implements OnInit {
+export class UploadBlobFilesDialogComponent {
   readonly dialogRef = inject(MatDialogRef<UploadBlobFilesDialogComponent>);
 
   readonly dialog = inject(MatDialog);
@@ -53,24 +47,18 @@ export class UploadBlobFilesDialogComponent implements OnInit {
     return res
   }
 
-  loading: boolean = false
-  uploading: boolean = false
+  canClose: boolean = true
+  canUpload: boolean = true
 
   form: FormGroup = new FormGroup({
     folderName: new FormControl('import')
   })
-
-  get DisableDialogButtons(): boolean {
-    return this.loading || this.uploading
-  }
 
   data = inject(MAT_DIALOG_DATA)
 
   constructor(private service: BlobStorageService,
     private snackService: ToastService) {
   }
-
-  async ngOnInit(): Promise<void> {}
 
   onFileSelected(event: any) {
     const files: File[] = event;
@@ -83,8 +71,9 @@ export class UploadBlobFilesDialogComponent implements OnInit {
     }
   }
 
-  async onUpload() {
-    this.uploading = true
+  onUpload() {
+    this.canUpload = false
+    this.canClose = false
     try {
       for (let i = 0; i < this.files!.length; i++) {
         const file = this.files![i]
@@ -106,19 +95,23 @@ export class UploadBlobFilesDialogComponent implements OnInit {
                 } else {
                   this.fileStatus[file.name].done = true
                 }
+
+                this.canClose = true
               }
             },
             error: (err: any) => {
               this.fileStatus[file.name].value = 0
               this.fileStatus[file.name].error = err
               this.fileStatus[file.name].done = true
+
+              this.canClose = true
             }
           })
       }
     } catch(error) {
       this.snackService.openError(error)
+      this.canUpload = false
     }
-    this.uploading = false
   }
 
   cancel() {
