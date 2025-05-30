@@ -25,6 +25,8 @@ export class LogEvent implements ILogEvent {
         public Result?: string,
     ) {
         moment.locale('en-EN')
-        this.When = moment(dateStamp).isValid() ? moment.utc(dateStamp).toDate() : null
+
+        const date = moment(dateStamp)
+        this.When = date.isValid() ? date.toDate() : null
     }
 }
