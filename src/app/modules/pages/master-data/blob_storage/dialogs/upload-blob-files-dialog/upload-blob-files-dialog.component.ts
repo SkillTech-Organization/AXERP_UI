@@ -9,7 +9,7 @@ import { BlobUploadFile } from "../../models/BlobUploadFile";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { AxerpProgressBarComponent } from "../../../../../shared/axerp-progress-bar/axerp-progress-bar.component";
-
+import { FileStatus } from "../../models/FileStatus";
 
 @Component({
   selector: 'app-upload-blob-files-dialog',
@@ -27,24 +27,22 @@ export class UploadBlobFilesDialogComponent {
 
   files: File[] = []
   
-  fileStatus: { [id: string]: { value: number, error?: string, done?: boolean }} = {}
+  fileStatuses: Map<string, FileStatus> = new Map<string, FileStatus>();
   get uploadFinished(): boolean {
-    var res = true
-    Object.keys(this.fileStatus).forEach((key: string) => {
-      if (!this.fileStatus[key].done) {
-        res = false
-      }
-    })
-    return res
+    return [...this.fileStatuses.values()].every(status => status.done);
   }
+
   get hasErrors(): boolean {
-    var res = false
-    Object.keys(this.fileStatus).forEach((key: string) => {
-      if (this.fileStatus[key].error) {
-        res = true
-      }
-    })
-    return res
+    return [...this.fileStatuses.values()].some(status => status.error !== '');
+  }
+
+  get finalMessage(): string {
+    if (this.files.length === 0)
+      return ''
+
+    return this.hasErrors
+      ? "Some files failed to upload. Please check the errors above."
+      : "All files have been uploaded successfully."
   }
 
   canClose: boolean = true
@@ -72,8 +70,8 @@ export class UploadBlobFilesDialogComponent {
       return
     }
 
-      for (let i = 0; i < files.length; i++) {
-        this.fileStatus[files[i].name] = { value: 0 }
+    for (let i = 0; i < files.length; i++) {
+      this.fileStatuses.set(files[i].name, new FileStatus())
       this.files.push(files[i])
     }
   }
@@ -87,28 +85,24 @@ export class UploadBlobFilesDialogComponent {
 
         this.service.UploadBlobFile(new UploadBlobFileRequest(uploadFile))
           .subscribe({
-            next: (event: any) => {
+            next: (event) => {
               if (event.type === HttpEventType.UploadProgress) {
-                this.fileStatus[file.name].value = Math.round(100 * event.loaded / (event.total ?? event.loaded))
-                if (this.fileStatus[file.name].value >= 100) {
-                  this.fileStatus[file.name].done = true
-                }
+                const status = this.fileStatuses.get(file.name)
+                status?.updateValue(event)
               } else if (event instanceof HttpResponse) {
+                const status = this.fileStatuses.get(file.name)
                 if (event.body?.Value?.RequestError) {
-                  this.fileStatus[file.name].value = 0
-                  this.fileStatus[file.name].error = event.body?.Value?.RequestError
-                  this.fileStatus[file.name].done = true
+                  status?.setError(event.body.Value.RequestError)
                 } else {
-                  this.fileStatus[file.name].done = true
+                  status?.complete();
                 }
 
                 this.canClose = true
               }
             },
-            error: (err: any) => {
-              this.fileStatus[file.name].value = 0
-              this.fileStatus[file.name].error = err
-              this.fileStatus[file.name].done = true
+            error: (err) => {
+              const status = this.fileStatuses.get(file.name)
+              status?.setError(err)
 
               this.canClose = true
             }
