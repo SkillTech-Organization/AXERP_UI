@@ -26,13 +26,20 @@ export class FileUploadInputComponent {
     return undefined
   }
 
-  @Output() fileSelected: EventEmitter<File[]> = new EventEmitter<File[]>()
+  @Output() fileSelected: EventEmitter<FileList> = new EventEmitter<FileList>()
   file: File | null = null
-  files: File[] | null = null
+  files: FileList | null = null
 
-  onChange(event: any) {
-    const file: File = event.target.files[0];
-    const files: File[] = event.target.files;
+  onChange(event: Event) {
+    const input = event.target as HTMLInputElement | null;
+    if (!input || !input.files) {
+      this.file = null;
+      this.files = null;
+      return;
+    }
+
+    const files: FileList = input.files;
+    const file: File | null = files && files.length > 0 ? files[0] : null;
 
     if (file) {
       this.file = file;
