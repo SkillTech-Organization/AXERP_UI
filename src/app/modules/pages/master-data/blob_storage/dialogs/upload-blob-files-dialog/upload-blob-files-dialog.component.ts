@@ -25,7 +25,7 @@ export class UploadBlobFilesDialogComponent {
 
   readonly dialog = inject(MatDialog);
 
-  files: File[] | null = null
+  files: File[] = []
   
   fileStatus: { [id: string]: { value: number, error?: string, done?: boolean }} = {}
   get uploadFinished(): boolean {
@@ -50,6 +50,8 @@ export class UploadBlobFilesDialogComponent {
   canClose: boolean = true
   canUpload: boolean = true
 
+  fileCountError: boolean = false
+
   form: FormGroup = new FormGroup({
     folderName: new FormControl('import')
   })
@@ -60,14 +62,19 @@ export class UploadBlobFilesDialogComponent {
     private snackService: ToastService) {
   }
 
-  onFileSelected(event: any) {
-    const files: File[] = event;
+  onFileSelected(files: FileList) {
+    this.fileCountError = false
+    if (files.length === 0)
+      return
 
-    if (files?.length > 0) {
+    if (files.length > 10) {
+      this.fileCountError = true
+      return
+    }
+
       for (let i = 0; i < files.length; i++) {
         this.fileStatus[files[i].name] = { value: 0 }
-      }
-      this.files = files;
+      this.files.push(files[i])
     }
   }
 
@@ -75,9 +82,8 @@ export class UploadBlobFilesDialogComponent {
     this.canUpload = false
     this.canClose = false
     try {
-      for (let i = 0; i < this.files!.length; i++) {
-        const file = this.files![i]
-        var uploadFile = new BlobUploadFile(file!.name, this.form.controls["folderName"].value, file!)
+      for (const file of this.files) {
+        var uploadFile = new BlobUploadFile(file.name, this.form.controls["folderName"].value, file)
 
         this.service.UploadBlobFile(new UploadBlobFileRequest(uploadFile))
           .subscribe({

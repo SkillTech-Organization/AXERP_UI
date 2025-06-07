@@ -38,6 +38,12 @@
 
     <hr/>
 
+    @if (fileCountError) {
+        <p>Cannot upload more than 10 files at the same time.</p>
+
+        <hr>
+    }
+
     <app-manager-button icon="upload" (btnClick)="onUpload()"
         [disabled]="!canUpload || !files || files.length === 0">
         Submit
