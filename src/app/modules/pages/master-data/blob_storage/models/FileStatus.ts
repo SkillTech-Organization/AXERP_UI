@@ -13,8 +13,12 @@ export class FileStatus {
     return this._error
   }
 
+  public get hasError(): boolean {
+    return this._error !== '';
+  }
+
   public get done(): boolean {
-    return this._completed && (this._value >= 100 || this._error !== '')
+    return this._completed && (this._value >= 100 || this.hasError)
   }
 
   public updateValue(event: HttpProgressEvent): void {

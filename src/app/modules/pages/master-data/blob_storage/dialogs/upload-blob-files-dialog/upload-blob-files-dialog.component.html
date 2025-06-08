@@ -59,4 +59,9 @@
         [disabled]="!canClose">
         Close
     </app-manager-button>
+
+    <app-manager-button icon="dynamic_form" (btnClick)="processBlobFiles()"
+        [disabled]="!canProcessBlobFiles">
+        Process Files
+    </app-manager-button>
 </div>
