@@ -5,7 +5,6 @@ import { LoadingSpinnerDialogContentComponent } from "../../../../../shared/load
 import { ImportGasTransactionResponse } from "../../models/ImportGasTransactionResponse";
 import { GasTransactionService } from "../../services/gas-transaction.service";
 
-
 @Component({
   selector: 'app-process-blob-files-dialog',
   standalone: true,
@@ -29,30 +28,38 @@ export class ProcessBlobFilesDialogComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const response = await this.service.ProcessBlobFiles()
+    let message = '';
     if (response?.Value) {
       const importResponse = response?.Value
 
       if (!importResponse.IsSuccess) {
-        this.snackService.openError(importResponse.RequestError ?? "Internal Server Error")
+        message = importResponse.RequestError ?? "Internal Server Error"
+        this.snackService.openError(message)
       } else {
         if (importResponse.Errors.length == 0 && importResponse.Warnings.length == 0 && importResponse.Processed.length == 0) {
-          this.snackService.openInfo("No new file to process!");
+          message = "No new file to process!";
+          this.snackService.openInfo(message);
         }
         else if (importResponse.Errors.length == 0 && importResponse.Warnings.length > 0 && importResponse.Processed.length == 0) {
-          this.snackService.openInfo("There were no processable blob files.");
+          message = "There were no processable blob files, but there were warnings!";
+          this.snackService.openInfo(message);
         }
         else if (importResponse.Errors.length == 0) {
-          this.snackService.openInfo("Success!");
+          message = "Success!";
+          this.snackService.openInfo(message);
         }
         else if (importResponse.Errors.length > 0 && importResponse.Processed.length > 0) {
-          this.snackService.openWarning("Not all files could be processed!");
+          message = "Not all files could be processed!";
+          this.snackService.openWarning(message);
         }
         else if (importResponse.Errors.length > 0 && importResponse.Processed.length == 0) {
-          this.snackService.openError("Error! No file could be processed!");
+          message = "Error! No file could be processed!";
+          this.snackService.openError(message);
         }
       }
     }
+
     this.loading = false
-    this.dialogRef.close(true);
+    this.dialogRef.close(message);
   }
 }

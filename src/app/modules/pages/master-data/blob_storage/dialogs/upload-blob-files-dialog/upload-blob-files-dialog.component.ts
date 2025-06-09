@@ -1,4 +1,5 @@
 import { Component, inject } from "@angular/core";
+import { CommonModule } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from "@angular/material/dialog";
 import { ToastService } from "../../../../../services/toast.service";
 import { BlobStorageService } from "../../services/blob-storage.service";
@@ -17,7 +18,7 @@ import { ProcessBlobFilesDialogComponent } from "../../../transactions/dialogs/p
   selector: 'app-upload-blob-files-dialog',
   standalone: true,
   imports: [
-    ManagerButtonComponent, FileUploadInputComponent, ReactiveFormsModule, AxerpProgressBarComponent
+    ManagerButtonComponent, FileUploadInputComponent, ReactiveFormsModule, AxerpProgressBarComponent, CommonModule,
 ],
   templateUrl: './upload-blob-files-dialog.component.html',
   styleUrl: './upload-blob-files-dialog.component.scss'
@@ -38,13 +39,14 @@ export class UploadBlobFilesDialogComponent {
     return [...this.fileStatuses.values()].some(status => status.hasError);
   }
 
+  processMessage: string = ''
   get finalMessage(): string {
     if (this.files.length === 0)
       return ''
 
     return this.hasErrors
       ? "Some files failed to upload. Please check the errors above."
-      : "All files have been uploaded successfully."
+      : "All files have been uploaded successfully, click on the Process blob files button."
   }
 
   get canProcessBlobFiles(): boolean {
@@ -53,8 +55,6 @@ export class UploadBlobFilesDialogComponent {
 
   canClose: boolean = true
   canUpload: boolean = true
-
-  fileCountError: boolean = false
 
   form: FormGroup = new FormGroup({
     folderName: new FormControl('import')
@@ -67,14 +67,8 @@ export class UploadBlobFilesDialogComponent {
   }
 
   onFileSelected(files: FileList) {
-    this.fileCountError = false
     if (files.length === 0)
       return
-
-    if (files.length > 10) {
-      this.fileCountError = true
-      return
-    }
 
     for (let i = 0; i < files.length; i++) {
       this.fileStatuses.set(files[i].name, new FileStatus())
@@ -130,7 +124,8 @@ export class UploadBlobFilesDialogComponent {
     })
     ref.afterClosed().subscribe(() => {
       try {
-        this.dialog.open(ProcessBlobFilesDialogComponent)
+        const ref = this.dialog.open(ProcessBlobFilesDialogComponent)
+        ref.afterClosed().subscribe(message => this.processMessage = message ?? '')
       } catch (error: any) {
         this.snackService.openError(error.message)
       }

@@ -38,15 +38,9 @@
 
     <hr/>
 
-    @if (fileCountError) {
-        <p>Cannot upload more than 10 files at the same time.</p>
-
-        <hr>
-    }
-
     @if (files.length > 0 && uploadFinished) {
-        <p>{{ finalMessage }}</p>
-
+        <p [ngClass]="{'file-error': hasErrors}">{{ finalMessage }}</p>
+        <p>{{ processMessage }}</p>
         <hr>
     }
 
@@ -62,6 +56,6 @@
 
     <app-manager-button icon="dynamic_form" (btnClick)="processBlobFiles()"
         [disabled]="!canProcessBlobFiles">
-        Process Files
+        Process Blob Files
     </app-manager-button>
 </div>
