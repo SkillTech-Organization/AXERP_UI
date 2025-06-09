@@ -10,6 +10,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { HttpEventType, HttpResponse } from "@angular/common/http";
 import { AxerpProgressBarComponent } from "../../../../../shared/axerp-progress-bar/axerp-progress-bar.component";
 import { FileStatus } from "../../models/FileStatus";
+import { ConfirmationDialogComponent } from "../../../../../shared/dialogs/confirmation-dialog/confirmation-dialog.component";
+import { ProcessBlobFilesDialogComponent } from "../../../transactions/dialogs/process-blob-files-dialog/process-blob-files-dialog.component";
 
 @Component({
   selector: 'app-upload-blob-files-dialog',
@@ -33,7 +35,7 @@ export class UploadBlobFilesDialogComponent {
   }
 
   get hasErrors(): boolean {
-    return [...this.fileStatuses.values()].some(status => status.error !== '');
+    return [...this.fileStatuses.values()].some(status => status.hasError);
   }
 
   get finalMessage(): string {
@@ -43,6 +45,10 @@ export class UploadBlobFilesDialogComponent {
     return this.hasErrors
       ? "Some files failed to upload. Please check the errors above."
       : "All files have been uploaded successfully."
+  }
+
+  get canProcessBlobFiles(): boolean {
+    return this.uploadFinished && [...this.fileStatuses.values()].some(status => !status.hasError);
   }
 
   canClose: boolean = true
@@ -91,11 +97,12 @@ export class UploadBlobFilesDialogComponent {
                 status?.updateValue(event)
               } else if (event instanceof HttpResponse) {
                 const status = this.fileStatuses.get(file.name)
+
                 if (event.body?.Value?.RequestError) {
                   status?.setError(event.body.Value.RequestError)
-                } else {
-                  status?.complete();
                 }
+
+                status?.complete();
 
                 this.canClose = true
               }
@@ -112,6 +119,22 @@ export class UploadBlobFilesDialogComponent {
       this.snackService.openError(error)
       this.canUpload = false
     }
+  }
+
+  processBlobFiles() {
+    const ref = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: "Confirmation",
+        message: "Are you sure you want to process the blob files?"
+      }
+    })
+    ref.afterClosed().subscribe(() => {
+      try {
+        this.dialog.open(ProcessBlobFilesDialogComponent)
+      } catch (error: any) {
+        this.snackService.openError(error.message)
+      }
+    })
   }
 
   cancel() {
