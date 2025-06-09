@@ -40,7 +40,7 @@
 
     @if (files.length > 0 && uploadFinished) {
         <p [ngClass]="{'file-error': hasErrors}">{{ finalMessage }}</p>
-
+        <p>{{ processMessage }}</p>
         <hr>
     }
 

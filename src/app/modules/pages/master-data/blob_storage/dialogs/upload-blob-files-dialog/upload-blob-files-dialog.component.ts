@@ -39,6 +39,7 @@ export class UploadBlobFilesDialogComponent {
     return [...this.fileStatuses.values()].some(status => status.hasError);
   }
 
+  processMessage: string = ''
   get finalMessage(): string {
     if (this.files.length === 0)
       return ''
@@ -123,7 +124,8 @@ export class UploadBlobFilesDialogComponent {
     })
     ref.afterClosed().subscribe(() => {
       try {
-        this.dialog.open(ProcessBlobFilesDialogComponent)
+        const ref = this.dialog.open(ProcessBlobFilesDialogComponent)
+        ref.afterClosed().subscribe(message => this.processMessage = message ?? '')
       } catch (error: any) {
         this.snackService.openError(error.message)
       }
