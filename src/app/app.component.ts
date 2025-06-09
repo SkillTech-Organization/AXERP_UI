@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -60,7 +60,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private authService: MsalService,
     private msalBroadcastService: MsalBroadcastService,
     changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
-    private tokenService: TokenStorageService
+    private tokenService: TokenStorageService,
+    private router: Router,
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -68,6 +69,11 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.router.events.subscribe((event) => {
+      // This is to ensure that the router outlet is initialized before we handle the redirect
+      if (event instanceof RouterOutlet) {
+        console.log('Current url: ', this.router.url);
+      }})
     this.authService.handleRedirectObservable().subscribe();
 
     this.setLoginDisplay();
