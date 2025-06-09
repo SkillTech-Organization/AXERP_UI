@@ -54,8 +54,6 @@ export class UploadBlobFilesDialogComponent {
   canClose: boolean = true
   canUpload: boolean = true
 
-  fileCountError: boolean = false
-
   form: FormGroup = new FormGroup({
     folderName: new FormControl('import')
   })
@@ -67,14 +65,8 @@ export class UploadBlobFilesDialogComponent {
   }
 
   onFileSelected(files: FileList) {
-    this.fileCountError = false
     if (files.length === 0)
       return
-
-    if (files.length > 10) {
-      this.fileCountError = true
-      return
-    }
 
     for (let i = 0; i < files.length; i++) {
       this.fileStatuses.set(files[i].name, new FileStatus())

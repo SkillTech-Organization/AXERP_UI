@@ -38,12 +38,6 @@
 
     <hr/>
 
-    @if (fileCountError) {
-        <p>Cannot upload more than 10 files at the same time.</p>
-
-        <hr>
-    }
-
     @if (files.length > 0 && uploadFinished) {
         <p>{{ finalMessage }}</p>
 
