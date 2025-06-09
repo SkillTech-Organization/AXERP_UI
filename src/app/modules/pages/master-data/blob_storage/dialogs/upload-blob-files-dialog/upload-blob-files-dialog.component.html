@@ -39,7 +39,7 @@
     <hr/>
 
     @if (files.length > 0 && uploadFinished) {
-        <p>{{ finalMessage }}</p>
+        <p [ngClass]="{'file-error': hasErrors}">{{ finalMessage }}</p>
 
         <hr>
     }
@@ -56,6 +56,6 @@
 
     <app-manager-button icon="dynamic_form" (btnClick)="processBlobFiles()"
         [disabled]="!canProcessBlobFiles">
-        Process Files
+        Process Blob Files
     </app-manager-button>
 </div>
