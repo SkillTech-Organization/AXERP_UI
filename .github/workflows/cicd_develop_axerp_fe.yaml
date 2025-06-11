@@ -120,7 +120,7 @@ jobs:
                --account-name ${{ env.STORAGE_NAME }} \
                --auth-mode key \
                --destination '$web' \
-               --source "./dist/${{ env.PROJECT_NAME }}" \
+               --source "./dist/${{ env.PROJECT_NAME }}/browser" \
                --overwrite
          env:
            AZURE_STORAGE_KEY: ${{ env.AZURE_STORAGE_KEY }}
