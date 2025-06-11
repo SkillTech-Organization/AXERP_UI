@@ -94,11 +94,6 @@ jobs:
         name: Development
         url: https://${{ env.STORAGE_NAME }}.z6.web.core.windows.net/index.html
       steps:
-       - name: Azure Login
-         uses: azure/login@v1
-         with:
-           creds: ${{ secrets.AXERP_FUNCTION_TEST_PUBLISHPROFILE }}
-
        - name: Download build artifact
          uses: actions/download-artifact@v4
          with:
@@ -129,7 +124,3 @@ jobs:
                --overwrite
          env:
            AZURE_STORAGE_KEY: ${{ env.AZURE_STORAGE_KEY }}
-
-       - name: Azure Logout
-         if: always()
-         run: az logout
