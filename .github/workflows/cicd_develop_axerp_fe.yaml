@@ -10,6 +10,8 @@ env:
   PROJECT_NAME: axerp
   SHA_SHORT_COMMIT_NUMBER: 0
   PACKAGE_VERSION: 0
+  API_URL: https://axerpazurefunctiontest.azurewebsites.net/
+  AXERP_TEST_API_CONFIG_REDIRECT: https://test.axerp.axegaz.com/index.html
 
 on:
   workflow_dispatch
