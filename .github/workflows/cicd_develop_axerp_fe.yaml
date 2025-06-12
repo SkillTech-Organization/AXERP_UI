@@ -65,6 +65,9 @@ jobs:
 
       - name: Show environment.ts contents
         run: cat src/environments/environment.ts
+
+      - name: Copy environment.ts to environment.staging.ts
+        run: cp src/environments/environment.ts src/environments/environment.staging.ts
         
      # - name: Early exit
      #   run: |
