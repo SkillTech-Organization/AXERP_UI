@@ -9,6 +9,7 @@
     "test": "ng test",
     "build-prod": "ng build --configuration=\"production\" --base-href",
     "build-staging": "ng build --configuration staging --base-href",
+    "build-test": "ng build --configuration development --base-href",
     "build-dev": "ng build --base-href"
   },
   "private": true,
