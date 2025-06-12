@@ -63,6 +63,9 @@ jobs:
           REDIRECT: ${{ env.AXERP_TEST_API_CONFIG_REDIRECT }}
           URI: ${{ env.API_URL }}
 
+      - name: Show environment.ts contents
+        run: cat src/environments/environment.ts
+        
      # - name: Early exit
      #   run: |
      #     gh run cancel ${{ github.run_id }}
