@@ -39,6 +39,7 @@ export interface IGasTransaction {
     BLFilename: string | null
     TruckLoadingCompanyComment: string | null
     TruckCompany: string | null
+    TransporterName: string | null
     AXERPHash: string
 }
 
@@ -87,6 +88,7 @@ export class GasTransaction implements IGasTransaction {
         public BLFilename: string | null,
         public TruckLoadingCompanyComment: string | null,
         public TruckCompany: string | null,
+        public TransporterName: string | null,
         public AXERPHash: string
     ) {
         moment.locale('en-EN')
