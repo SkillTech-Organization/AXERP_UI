@@ -25,3 +25,40 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+# Increasing version number and building
+
+## Version number
+
+To increase the current project version, the "version" field in the package.json configuration file needs to be updated.
+
+`
+{
+  "name": "AXERP",
+  "version": "1.0.0",
+  "scripts": {
+    ...
+`
+
+## Build
+
+Currently there are 4 specialized environment files - not counting the default, unnamed environment.ts:
+- development
+- localhost
+- release
+- staging
+
+Due to security reasons, the values for the fields in these environment files are not commited to Git.
+
+When building a new version, the following commands need to be entered into the command line:
+
+`
+export NODE_OPTIONS=--openssl-legacy-provider; ng build --configuration="release" --base-href
+`
+
+The first command is: `export NODE_OPTIONS=--openssl-legacy-provider;`
+This can be obligatory when using newer node.js version to avoid errors.
+
+The second part is: `ng build --configuration="release" --base-href`
+This is the actual building of the angular project.
+It selects the `release` environment as the one used for the build. The `--base-href` is needed for the index.html.

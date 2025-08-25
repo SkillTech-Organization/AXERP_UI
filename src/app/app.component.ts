@@ -27,6 +27,7 @@ import {
 import { filter, Subject, takeUntil } from 'rxjs';
 import { TokenStorageService } from './modules/services/token-storage.service';
 import { LoginUser } from './util/models/LoginUser';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
